@@ -4,7 +4,7 @@
  <title>Akhil Sankar</title>
  <link href="http://localhost:4000/atom.xml" rel="self"/>
  <link href="http://localhost:4000/"/>
- <updated>2023-11-02T14:49:48-04:00</updated>
+ <updated>2023-11-02T15:06:29-04:00</updated>
  <id>http://localhost:4000</id>
  <author>
    <name>Akhil Sankar</name>
@@ -18,6 +18,8 @@
    <updated>2023-11-02T00:00:00-04:00</updated>
    <id>http://localhost:4000/2023/11/02/introducing-lanyon</id>
    <content type="html">&lt;h3 id=&quot;blah-blah&quot;&gt;Blah Blah.&lt;/h3&gt;
+
+&lt;p&gt;$ x + y $&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;check out my &lt;a href=&quot;/about&quot;&gt;About Page&lt;/a&gt;.&lt;/li&gt;

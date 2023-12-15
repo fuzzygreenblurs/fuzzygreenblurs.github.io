@@ -1,29 +1,11 @@
 ---
 layout: page
-title: About
+title: hello.
 ---
 
-<p class="message">
-  Hey there! This page is included as an example. Feel free to customize it for your own use upon downloading. Carry on!
-</p>
+My name is Akhil and I am a software engineer who wields his powers to make stuff move in the physical domain. 
 
-In the novel, *The Strange Case of Dr. Jeykll and Mr. Hyde*, Mr. Poole is Dr. Jekyll's virtuous and loyal butler. Similarly, Poole is an upstanding and effective butler that helps you build Jekyll themes. It's made by [@mdo](https://twitter.com/mdo).
+Over the past nine years, I have worked as a software engineer in the IoT sector. Most recently, I worked as a Robotics Software Engineer with [OpenShelf](https://www.opshelf.com/), testing a variety of sensor integrations and developing an AWS hosted MQTTS bidirectional telemetry pipeline physical robot. I am currently a graduate student at Rutgers University, pursuing my MS in Electrical and Computer Engineering, specializing in robotic systems and control.
 
-There are currently two themes built on Poole:
+As a side quest, I like simulating physical phenomena in software. I am currently working on a simple 2D game physics engine (courtesy of the fantastic [Pikuma course](https://pikuma.com/courses/game-physics-engine-programming) on the subject). Check out my posts on this project, and others :)
 
-* [Hyde](http://hyde.getpoole.com)
-* [Lanyon](http://lanyon.getpoole.com)
-
-Learn more and contribute on [GitHub](https://github.com/poole).
-
-## Setup
-
-Some fun facts about the setup of this project include:
-
-* Built for [Jekyll](https://jekyllrb.com)
-* Developed on GitHub and hosted for free on [GitHub Pages](https://pages.github.com)
-* Coded with [Atom](https://atom.io)
-
-Have questions or suggestions? Feel free to [open an issue on GitHub](https://github.com/poole/issues/new) or [ask me on Twitter](https://twitter.com/mdo).
-
-Thanks for reading!

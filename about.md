@@ -1,7 +1,9 @@
 ---
 layout: page
-title: hello.
+title: Hello.
 ---
+
+
 
 My name is Akhil and I am a software engineer who wields his powers to make stuff move in the physical domain. 
 

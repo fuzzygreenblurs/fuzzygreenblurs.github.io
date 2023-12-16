@@ -23,17 +23,18 @@ What can we do with an MQTT based broker/client approach:
 
 For more information, check out HiveMQ's [great writeup on what MQTT is and its benefits](https://www.hivemq.com/blog/).
 
+<br/><br/>
+
 ## Code
 
-This code went through cursory testing on a RPi 4 (SO DONT RELY ON IT IN A PRODUCTION ENVIRONMENT)
-It builds on top of the Python Paho MQTT Client (on Python 3)
+This code went through cursory testing on a RPi 4 (SO DONT RELY ON IT IN A PRODUCTION ENVIRONMENT). It builds on top of the Python Paho MQTT Client (on Python 3).
 
 We want each client to be able to perform some basic tasks:
-    - securely connect to a remote broker (TLSv1.2)
-    - perform some desired action for callbacks: `on_connect`, `on_disconnect`
-    - provide an API to publish a message to the broker
+- securely connect to a remote broker (TLSv1.2)
+- perform some desired action for callbacks: `on_connect`, `on_disconnect`
+- provide an API to publish a message to the broker
 
-- the `Base` class below is responsible for connecting, maintaining and disconnecting a broker connection:
+The `Base` class below is responsible for connecting, maintaining and disconnecting a broker connection:
 
 ```python
 import ssl
@@ -209,6 +210,7 @@ if __name__ == "__main__":
     handler.disconnect() # loop_stop executed in the connect method
 
 ```
+<br/><br/>
 
 ## Standing Up a Secure Mosquitto Broker
 
@@ -232,4 +234,5 @@ I will provide a high level overview of the steps to run a secure instance of th
 5. configure mosquitto to use TLS through our new certificates
 6. you can now ping the broker locally and remotely
 
+<br/><br/>
 ## Thanks for reading!

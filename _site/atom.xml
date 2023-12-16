@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
  <title>Akhil Sankar</title>
- <link href="https://fuzzygreenblurs.github.io/atom.xml" rel="self"/>
- <link href="https://fuzzygreenblurs.github.io/"/>
- <updated>2023-12-15T19:12:30-05:00</updated>
- <id>https://fuzzygreenblurs.github.io</id>
+ <link href="http://localhost:4000/atom.xml" rel="self"/>
+ <link href="http://localhost:4000/"/>
+ <updated>2023-12-15T19:34:12-05:00</updated>
+ <id>http://localhost:4000</id>
  <author>
    <name>Akhil Sankar</name>
    <email></email>
@@ -14,9 +14,9 @@
  
  <entry>
    <title>A Basic Mosquitto Pipeline</title>
-   <link href="https://fuzzygreenblurs.github.io/2023/11/02/introducing-lanyon/"/>
+   <link href="http://localhost:4000/2023/11/02/introducing-lanyon/"/>
    <updated>2023-11-02T00:00:00-04:00</updated>
-   <id>https://fuzzygreenblurs.github.io/2023/11/02/introducing-lanyon</id>
+   <id>http://localhost:4000/2023/11/02/introducing-lanyon</id>
    <content type="html">&lt;p&gt;&lt;em&gt;WARNING: the entirity of this implementation is for development purposes only and has not been tested for production systems. it is purely meant as a guideline to document some basic research findings and should NOT be used as-is for any real-world applications.&lt;/em&gt;
 &lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&quot;motivation&quot;&gt;Motivation&lt;/h2&gt;
@@ -41,19 +41,20 @@
 
 &lt;p&gt;For more information, check out HiveMQ’s &lt;a href=&quot;https://www.hivemq.com/blog/&quot;&gt;great writeup on what MQTT is and its benefits&lt;/a&gt;.&lt;/p&gt;
 
+&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+
 &lt;h2 id=&quot;code&quot;&gt;Code&lt;/h2&gt;
 
-&lt;p&gt;This code went through cursory testing on a RPi 4 (SO DONT RELY ON IT IN A PRODUCTION ENVIRONMENT)
-It builds on top of the Python Paho MQTT Client (on Python 3)&lt;/p&gt;
+&lt;p&gt;This code went through cursory testing on a RPi 4 (SO DONT RELY ON IT IN A PRODUCTION ENVIRONMENT). It builds on top of the Python Paho MQTT Client (on Python 3).&lt;/p&gt;
 
-&lt;p&gt;We want each client to be able to perform some basic tasks:
-    - securely connect to a remote broker (TLSv1.2)
-    - perform some desired action for callbacks: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;on_connect&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;on_disconnect&lt;/code&gt;
-    - provide an API to publish a message to the broker&lt;/p&gt;
-
+&lt;p&gt;We want each client to be able to perform some basic tasks:&lt;/p&gt;
 &lt;ul&gt;
-  &lt;li&gt;the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Base&lt;/code&gt; class below is responsible for connecting, maintaining and disconnecting a broker connection:&lt;/li&gt;
+  &lt;li&gt;securely connect to a remote broker (TLSv1.2)&lt;/li&gt;
+  &lt;li&gt;perform some desired action for callbacks: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;on_connect&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;on_disconnect&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;provide an API to publish a message to the broker&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;p&gt;The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Base&lt;/code&gt; class below is responsible for connecting, maintaining and disconnecting a broker connection:&lt;/p&gt;
 
 &lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ssl&lt;/span&gt;
 &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;time&lt;/span&gt;
@@ -226,6 +227,7 @@ load dotenv code here into variables (marked in CAPS below)
     &lt;span class=&quot;n&quot;&gt;handler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;disconnect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# loop_stop executed in the connect method
 &lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;standing-up-a-secure-mosquitto-broker&quot;&gt;Standing Up a Secure Mosquitto Broker&lt;/h2&gt;
 
@@ -255,6 +257,7 @@ load dotenv code here into variables (marked in CAPS below)
   &lt;li&gt;you can now ping the broker locally and remotely&lt;/li&gt;
 &lt;/ol&gt;
 
+&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&quot;thanks-for-reading&quot;&gt;Thanks for reading!&lt;/h2&gt;
 </content>
  </entry>

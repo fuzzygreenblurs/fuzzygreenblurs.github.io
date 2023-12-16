@@ -3,27 +3,12 @@ layout: page
 title: Projects
 ---
 
-<p class="message">
-  Hey there! This page is included as an example. Feel free to customize it for your own use upon downloading. Carry on!
-</p>
+## 2D Physics Engine (Pikuma Course)
 
-In the novel, *The Strange Case of Dr. Jeykll and Mr. Hyde*, Mr. Poole is Dr. Jekyll's virtuous and loyal butler. Similarly, Poole is an upstanding and effective butler that helps you build Jekyll themes. It's made by [@mdo](https://twitter.com/mdo).
+Note: all demos in this section are built using vanilla C++17 and SDL2
 
-There are currently two themes built on Poole:
+#### 1. Impulse Collision Resolution
 
-* [Hyde](http://hyde.getpoole.com)
-* [Lanyon](http://lanyon.getpoole.com)
+This demo showcases collision detection and resolution using a penetration and impulse calculation of circular objects of different masses at a different coefficients of resitution. In the showcased demo, one object is maintained in a static position (invMass = 0) while new objects are dynamically spawned in the environment, showcasing multiple simultaneous collisions. You can find the code for this specific demo in this [commit](https://github.com/fuzzygreenblurs/2d_game_physics_engine/commit/ba62d30afc7afab7a5d92c4412c0ffd2a9d1d162).
 
-Learn more and contribute on [GitHub](https://github.com/poole).
-
-## Setup
-
-Some fun facts about the setup of this project include:
-
-* Built for [Jekyll](https://jekyllrb.com)
-* Developed on GitHub and hosted for free on [GitHub Pages](https://pages.github.com)
-* Coded with [Atom](https://atom.io)
-
-Have questions or suggestions? Feel free to [open an issue on GitHub](https://github.com/poole/issues/new) or [ask me on Twitter](https://twitter.com/mdo).
-
-Thanks for reading!
+[![Impulse Collision Resolution Demo](https://youtu.be/uDtQh0QGs48/0.jpg)](https://youtu.be/uDtQh0QGs48 "Impulse Collision Resolution")

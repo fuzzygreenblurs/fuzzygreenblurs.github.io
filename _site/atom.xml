@@ -4,7 +4,7 @@
  <title>Akhil Sankar</title>
  <link href="http://localhost:4000/atom.xml" rel="self"/>
  <link href="http://localhost:4000/"/>
- <updated>2024-01-01T18:43:09-05:00</updated>
+ <updated>2024-01-01T18:45:39-05:00</updated>
  <id>http://localhost:4000</id>
  <author>
    <name>Akhil Sankar</name>
@@ -25,8 +25,10 @@
 
 &lt;p style=&quot;text-align: justify&quot;&gt;As a side quest, I’m interested in how physical phenomena can be rendered and simulated through software. I am currently working on a simple 2D game physics engine (courtesy of the fantastic &lt;a href=&quot;https://pikuma.com/courses/game-physics-engine-programming&quot;&gt;Pikuma course&lt;/a&gt; on the subject). If you’re interested, you can check out this project and some other ones on this site.&lt;/p&gt;
 
+&lt;p style=&quot;text-align: justify&quot;&gt;Cheers!&lt;/p&gt;
+
 &lt;p style=&quot;text-align: justify&quot;&gt;&lt;br /&gt;
-&lt;em&gt;P.S. I love making new friends! Feel free to &lt;a href=&quot;https://www.linkedin.com/in/akhilsankar/&quot;&gt;ping me&lt;/a&gt; if you ever feel like a coffee and a chat :)&lt;/em&gt;&lt;/p&gt;
+&lt;em&gt;P.S. I love making new friends. Feel free to &lt;a href=&quot;https://www.linkedin.com/in/akhilsankar/&quot;&gt;ping me&lt;/a&gt; if you ever feel like a coffee and a chat :)&lt;/em&gt;&lt;/p&gt;
 
 </content>
  </entry>

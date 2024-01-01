@@ -15,7 +15,10 @@ Over the past nine years, I have worked as a software engineer at different laye
 As a side quest, I'm interested in how physical phenomena can be rendered and simulated through software. I am currently working on a simple 2D game physics engine (courtesy of the fantastic [Pikuma course](https://pikuma.com/courses/game-physics-engine-programming) on the subject). If you're interested, you can check out this project and some other ones on this site.
 {: style="text-align: justify"}
 
+Cheers!
+{: style="text-align: justify"}
+
 <br>
-*P.S. I love making new friends! Feel free to [ping me](https://www.linkedin.com/in/akhilsankar/) if you ever feel like a coffee and a chat :)*
+*P.S. I love making new friends. Feel free to [ping me](https://www.linkedin.com/in/akhilsankar/) if you ever feel like a coffee and a chat :)*
 {: style="text-align: justify"}
 

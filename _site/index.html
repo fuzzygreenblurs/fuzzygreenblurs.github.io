@@ -14,18 +14,18 @@
   </title>
 
   
-  <link rel="canonical" href="http://localhost:4000/">
+  <link rel="canonical" href="https://fuzzygreenblurs.github.io/">
   
 
-  <link rel="stylesheet" href="http://localhost:4000/public/css/poole.css">
-  <link rel="stylesheet" href="http://localhost:4000/public/css/syntax.css">
-  <link rel="stylesheet" href="http://localhost:4000/public/css/lanyon.css">
+  <link rel="stylesheet" href="https://fuzzygreenblurs.github.io/public/css/poole.css">
+  <link rel="stylesheet" href="https://fuzzygreenblurs.github.io/public/css/syntax.css">
+  <link rel="stylesheet" href="https://fuzzygreenblurs.github.io/public/css/lanyon.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
 
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://localhost:4000/public/apple-touch-icon-precomposed.png">
-  <link rel="shortcut icon" href="http://localhost:4000/public/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://fuzzygreenblurs.github.io/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="https://fuzzygreenblurs.github.io/public/favicon.ico">
 
-  <link rel="alternate" type="application/rss+xml" title="RSS" href="http://localhost:4000/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="https://fuzzygreenblurs.github.io/atom.xml">
 
   
 </head>
@@ -44,7 +44,7 @@
   </div>
 
   <nav class="sidebar-nav">
-    <a class="sidebar-nav-item active" href="http://localhost:4000/">Posts</a>
+    <a class="sidebar-nav-item active" href="https://fuzzygreenblurs.github.io/">About Me</a>
 
     
 
@@ -59,16 +59,10 @@
       
     
       
-        
-          <a class="sidebar-nav-item" href="http://localhost:4000/about/">Hello.</a>
-        
-      
-    
-      
     
       
         
-          <a class="sidebar-nav-item" href="http://localhost:4000/projects/">Projects</a>
+          <a class="sidebar-nav-item" href="https://fuzzygreenblurs.github.io/projects/">Projects</a>
         
       
     
@@ -102,266 +96,21 @@
   
   <div class="post">
     <h1 class="post-title">
-      <a href="http://localhost:4000/2023/11/02/introducing-lanyon/">
-        A Basic Mosquitto Pipeline
+      <a href="https://fuzzygreenblurs.github.io/2023/11/02/introducing-lanyon/">
+        Hello.
       </a>
     </h1>
 
-    <span class="post-date">02 Nov 2023</span>
+    <br></br>
 
-    <p><em>WARNING: the entirity of this implementation is for development purposes only and has not been tested for production systems. it is purely meant as a guideline to document some basic research findings and should NOT be used as-is for any real-world applications.</em>
-<br /><br /></p>
-<h2 id="motivation">Motivation</h2>
+    <p>My name is Akhil and I am a software engineer who wields his powers to make stuff move in the physical domain.</p>
 
-<p>This is a basic implementation of a Mosquitto based MQTT pipeline. MQTT is a lightweight M2M protocol designed with IoT applications in mind. For example, if we want to read the state of an assembly line and trigger changes to the system, we might use an MQTT based pipeline to do this.</p>
+<p>Over the past nine years, I have worked as a software engineer in the IoT sector. Most recently, I worked as a Robotics Software Engineer with <a href="https://www.opshelf.com/">OpenShelf</a>, testing a variety of sensor integrations and developing an AWS hosted MQTTS bidirectional telemetry pipeline physical robot. I am currently a graduate student at Rutgers University, pursuing my MS in Electrical and Computer Engineering, specializing in robotic systems and control.</p>
 
-<p>What can we do with an MQTT based broker/client approach:</p>
+<p>As a side quest, I’m interested in how physical phenomena can be rendered and simulated through software. I am currently working on a simple 2D game physics engine (courtesy of the fantastic <a href="https://pikuma.com/courses/game-physics-engine-programming">Pikuma course</a> on the subject). Check out my posts on this project, and others :)</p>
 
-<ol>
-  <li>scalability: we might have several thousand sensors and actuators across our line that need to communicate with our central server cluster</li>
-  <li>quality of service: depending on importance, we want the flexibility of a fire-and-forget, an atleast-once or even an exactly-once guarantee of message delivery</li>
-  <li>persistent connections: edge devices might intermittently lose connection - we need sessions to persist between client and broker if the connection fails</li>
-  <li>publish-subscribe contract:
-    <ul>
-      <li>trigger actions often take time to implement - unlike a RESTful call, we want to decouple actions from requests and allow them to execute asynchronously</li>
-      <li>sometimes, multiple clients/machines care about an upstream message - all of these should be able to subscribe to messages/topics that they care about (many-to-many)</li>
-    </ul>
-  </li>
-  <li>last-will-and-testament: in the event of an edge device failure, we want the network to allow this client to gracefully disconnect from the pipeline</li>
-  <li>heartbeat: in general, we want a low-power/bandwidth approach to evaluating the state of the entire network in near real-time through the broker</li>
-</ol>
-
-<p>For more information, check out HiveMQ’s <a href="https://www.hivemq.com/blog/">great writeup on what MQTT is and its benefits</a>.</p>
-
-<p><br /><br /></p>
-
-<h2 id="code">Code</h2>
-
-<p>This code went through cursory testing on a RPi 4 (SO DONT RELY ON IT IN A PRODUCTION ENVIRONMENT). It builds on top of the Python Paho MQTT Client (on Python 3).</p>
-
-<p>We want each client to be able to perform some basic tasks:</p>
-<ul>
-  <li>securely connect to a remote broker (TLSv1.2)</li>
-  <li>perform some desired action for callbacks: <code class="language-plaintext highlighter-rouge">on_connect</code>, <code class="language-plaintext highlighter-rouge">on_disconnect</code></li>
-  <li>provide an API to publish a message to the broker</li>
-</ul>
-
-<p>The <code class="language-plaintext highlighter-rouge">Base</code> class below is responsible for connecting, maintaining and disconnecting a broker connection:</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">ssl</span>
-<span class="kn">import</span> <span class="n">time</span>
-<span class="kn">import</span> <span class="n">paho.mqtt.client</span> <span class="k">as</span> <span class="n">mqtt</span>
-<span class="kn">from</span> <span class="n">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
-
-<span class="sh">'''</span><span class="s">
-define broker env vars somewhere safe!
-load dotenv code here into variables (marked in CAPS below)
-</span><span class="sh">'''</span>
-
-<span class="k">class</span> <span class="nc">Base</span><span class="p">:</span>
-
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">client_id</span><span class="o">=</span><span class="sh">"</span><span class="s">test_client</span><span class="sh">"</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="n">HOST</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">PORT</span><span class="p">):</span>
-        <span class="n">self</span><span class="p">.</span><span class="n">client_id</span> <span class="o">=</span> <span class="n">client_id</span>
-        <span class="n">self</span><span class="p">.</span><span class="n">host</span> <span class="o">=</span> <span class="n">host</span>
-        <span class="n">self</span><span class="p">.</span><span class="n">port</span> <span class="o">=</span> <span class="n">port</span>
-
-    <span class="k">def</span> <span class="nf">init_client</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
-        <span class="n">client</span> <span class="o">=</span> <span class="n">mqtt</span><span class="p">.</span><span class="nc">Client</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">client_id</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">host</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">port</span><span class="p">)</span>
-
-        <span class="c1"># bind callbacks
-</span>        <span class="n">client</span><span class="p">.</span><span class="n">on_connect</span>       <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">on_connect</span>
-        <span class="n">client</span><span class="p">.</span><span class="n">on_disconnect</span>    <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">on_disconnect</span>
-        <span class="n">client</span><span class="p">.</span><span class="n">on_log</span>           <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">on_log</span>
-
-        <span class="n">self</span><span class="p">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">client</span>
-        
-    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
-        <span class="nf">if </span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">host</span> <span class="o">==</span> <span class="n">HOST</span><span class="p">):</span>
-            <span class="n">self</span><span class="p">.</span><span class="n">client</span><span class="p">.</span><span class="nf">tls_set</span><span class="p">(</span>
-                <span class="n">ca_certs</span><span class="o">=</span><span class="n">ROOT_CERT</span><span class="p">,</span> 
-                <span class="n">tls_version</span><span class="o">=</span><span class="n">ssl</span><span class="p">.</span><span class="n">PROTOCOL_TLSv1_2</span>
-            <span class="p">)</span>
-
-            <span class="n">self</span><span class="p">.</span><span class="n">client</span><span class="p">.</span><span class="nf">username_pw_set</span><span class="p">(</span><span class="n">BROKER_USER</span><span class="p">,</span> <span class="n">BROKER_PW</span><span class="p">)</span>
-
-        <span class="n">self</span><span class="p">.</span><span class="n">client</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">host</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">port</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
-        <span class="n">self</span><span class="p">.</span><span class="n">client</span><span class="p">.</span><span class="nf">loop_start</span><span class="p">()</span>
-
-    <span class="k">def</span> <span class="nf">disconnect</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
-        <span class="n">self</span><span class="p">.</span><span class="n">client</span><span class="p">.</span><span class="nf">disconnect</span><span class="p">()</span>
-
-    <span class="k">def</span> <span class="nf">current_time</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">time</span><span class="p">.</span><span class="nf">strftime</span><span class="p">(</span><span class="sh">'</span><span class="s">%H:%M:%S</span><span class="sh">'</span><span class="p">,</span> <span class="n">time</span><span class="p">.</span><span class="nf">localtime</span><span class="p">())</span>
-
-    <span class="c1">########## PUBLISHER METHODS #############
-</span>
-    <span class="k">def</span> <span class="nf">publish</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">topic</span><span class="o">=</span><span class="sh">"</span><span class="s">test</span><span class="sh">"</span><span class="p">,</span> <span class="n">payload</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="n">payload</span> <span class="o">=</span> <span class="n">payload</span> <span class="ow">or</span> <span class="sa">f</span><span class="sh">"</span><span class="s">dummy publish at </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="nf">current_time</span><span class="p">()</span><span class="si">}</span><span class="sh">"</span>
-        <span class="n">self</span><span class="p">.</span><span class="n">client</span><span class="p">.</span><span class="nf">publish</span><span class="p">(</span><span class="n">topic</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
-
-    <span class="c1">########## CALLBACKS #############
-</span>
-    <span class="k">def</span> <span class="nf">on_connect</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">userdata</span><span class="p">,</span> <span class="n">flags</span><span class="p">,</span> <span class="n">rc</span><span class="p">):</span>
-        <span class="c1"># pdb.set_trace()
-</span>        <span class="nf">if</span><span class="p">(</span><span class="n">rc</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
-            <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">connected OK: </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">host</span><span class="si">}</span><span class="s">:</span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">port</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">bad connection. status: </span><span class="sh">"</span><span class="p">,</span> <span class="n">rc</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">on_disconnect</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">userdata</span><span class="p">,</span> <span class="n">rc</span><span class="p">):</span>
-        <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">rc: </span><span class="si">{</span><span class="n">rc</span><span class="si">}</span><span class="s">: </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">client_id</span><span class="si">}</span><span class="s"> is disconnected</span><span class="sh">"</span><span class="p">)</span>
-        <span class="n">self</span><span class="p">.</span><span class="n">client</span><span class="p">.</span><span class="nf">loop_stop</span><span class="p">()</span>
-
-    <span class="k">def</span> <span class="nf">on_log</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">userdata</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">buf</span><span class="p">):</span>
-        <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">log: </span><span class="sh">"</span><span class="p">,</span> <span class="n">buf</span><span class="p">)</span>
-</code></pre></div></div>
-
-<p>We also want to leverage a parallel process on the Pi to perform a periodic publish
-    - in this case, we call this a <code class="language-plaintext highlighter-rouge">Ping</code> action but keep in mind that the Mosquitto broker will performing heartbeat checks implicitly
-    - the ping action is purely done for demonstration here</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">sys</span>
-<span class="kn">import</span> <span class="n">time</span>
-<span class="kn">from</span> <span class="n">base</span> <span class="kn">import</span> <span class="n">Base</span>
-
-<span class="k">class</span> <span class="nc">PingHandler</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">client_id</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">(</span><span class="n">client_id</span><span class="p">)</span>
-
-        <span class="n">self</span><span class="p">.</span><span class="nf">init_client</span><span class="p">()</span>
-        <span class="n">self</span><span class="p">.</span><span class="nf">connect</span><span class="p">()</span>
-        <span class="n">self</span><span class="p">.</span><span class="nf">ping</span><span class="p">()</span>
-    
-    <span class="k">def</span> <span class="nf">ping</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
-        <span class="nf">while</span><span class="p">(</span><span class="bp">True</span><span class="p">):</span>
-            <span class="n">self</span><span class="p">.</span><span class="nf">publish</span><span class="p">(</span>
-                <span class="sh">"</span><span class="s">heartbeat</span><span class="sh">"</span><span class="p">,</span> 
-                <span class="sa">f</span><span class="sh">"</span><span class="s">PING: </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">client_id</span><span class="si">}</span><span class="s"> at </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="nf">current_time</span><span class="p">()</span><span class="si">}</span><span class="s">...</span><span class="sh">"</span>
-            <span class="p">)</span>
-
-            <span class="n">time</span><span class="p">.</span><span class="nf">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
-    <span class="n">handler</span> <span class="o">=</span> <span class="nc">PingHandler</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-    <span class="n">time</span><span class="p">.</span><span class="nf">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">handler</span><span class="p">.</span><span class="nf">disconnect</span><span class="p">()</span>
-</code></pre></div></div>
-
-<p>Finally, we provide the added MQTT client pubsub functionality:
-    - provide an API to subscribe to a topic through a function call
-    - after subscribing to a topic, we might want a client to trigger a callback upon receiving a specific message over that topic
-    - in the <code class="language-plaintext highlighter-rouge">main</code> function, we are also able to trigger callbacks between different clients by running these scripts on multiple RPis at once</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">pdb</span>
-<span class="kn">import</span> <span class="n">sys</span>
-<span class="kn">import</span> <span class="n">time</span>
-<span class="kn">from</span> <span class="n">base</span> <span class="kn">import</span> <span class="n">Base</span>
-
-<span class="k">class</span> <span class="nc">PubSubHandler</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">client_id</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">(</span><span class="n">client_id</span><span class="p">)</span>
-
-        <span class="n">self</span><span class="p">.</span><span class="nf">init_client</span><span class="p">()</span>
-        <span class="n">self</span><span class="p">.</span><span class="nf">bind_pubsub_callbacks</span><span class="p">()</span>
-        <span class="n">self</span><span class="p">.</span><span class="nf">connect</span><span class="p">()</span>
-        <span class="n">self</span><span class="p">.</span><span class="nf">listen</span><span class="p">()</span>
-
-    <span class="k">def</span> <span class="nf">bind_pubsub_callbacks</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
-        <span class="nf">super</span><span class="p">().</span><span class="nf">init_client</span><span class="p">()</span>
-        <span class="n">self</span><span class="p">.</span><span class="n">client</span><span class="p">.</span><span class="n">on_message</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">on_message</span>
-        <span class="n">self</span><span class="p">.</span><span class="n">client</span><span class="p">.</span><span class="nf">message_callback_add</span><span class="p">(</span>
-            <span class="n">self</span><span class="p">.</span><span class="n">client_id</span><span class="p">,</span> 
-            <span class="n">self</span><span class="p">.</span><span class="n">callback</span>
-        <span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">listen</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
-        <span class="n">self</span><span class="p">.</span><span class="n">client</span><span class="p">.</span><span class="nf">subscribe</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">client_id</span><span class="p">)</span>
-
-    <span class="c1">##### CALLBACKS ######
-</span>
-    <span class="k">def</span> <span class="nf">on_subscribe</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">userdata</span><span class="p">,</span> <span class="n">mid</span><span class="p">,</span> <span class="n">granted_qos</span><span class="p">):</span>
-        <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">subscription successful OK.</span><span class="sh">"</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">on_message</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">userdata</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
-        <span class="nf">print</span><span class="p">(</span>
-            <span class="sh">"</span><span class="s">catchall: MSG RCVD: </span><span class="sh">"</span> <span class="p">,</span> 
-            <span class="nf">str</span><span class="p">(</span><span class="n">message</span><span class="p">.</span><span class="n">payload</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="sh">"</span><span class="s">utf-8</span><span class="sh">"</span><span class="p">))</span>
-        <span class="p">)</span>
-
-        <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">message topic: </span><span class="sh">"</span><span class="p">,</span> <span class="n">message</span><span class="p">.</span><span class="n">topic</span><span class="p">)</span>
-        <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">message qos=</span><span class="sh">"</span><span class="p">,</span> <span class="n">message</span><span class="p">.</span><span class="n">qos</span><span class="p">)</span>
-        <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">message retain flag=</span><span class="sh">"</span><span class="p">,</span> <span class="n">message</span><span class="p">.</span><span class="n">retain</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">userdata</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
-        <span class="c1"># print("specific: message received: " , 
-</span>            <span class="c1"># str(message.payload.decode("utf-8"))
-</span>        <span class="c1"># )
-</span>        
-        <span class="c1"># print("message topic: ", message.topic)
-</span>        <span class="c1"># print("message qos=", message.qos)
-</span>        <span class="n">payload</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">"</span><span class="s">CB_RES: </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">client_id</span><span class="si">}</span><span class="s"> at </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="nf">current_time</span><span class="p">()</span><span class="si">}</span><span class="sh">"</span>
-        <span class="n">self</span><span class="p">.</span><span class="nf">publish</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">cb_res</span><span class="sh">"</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
-
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
-    <span class="n">handler</span> <span class="o">=</span> <span class="nc">PubSubHandler</span><span class="p">(</span><span class="n">client_id</span><span class="o">=</span><span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-    <span class="n">time</span><span class="p">.</span><span class="nf">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-
-    <span class="c1">#### work ####
-</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">):</span>
-        <span class="n">handler</span><span class="p">.</span><span class="nf">publish</span><span class="p">(</span>
-            <span class="n">handler</span><span class="p">.</span><span class="n">client_id</span><span class="p">,</span> 
-            <span class="sa">f</span><span class="sh">"</span><span class="s">CB_REQ:</span><span class="si">{</span><span class="n">handler</span><span class="p">.</span><span class="n">client_id</span><span class="si">}</span><span class="s"> at </span><span class="si">{</span><span class="n">handler</span><span class="p">.</span><span class="nf">current_time</span><span class="p">()</span><span class="si">}</span><span class="sh">"</span>
-        <span class="p">)</span>
-
-        <span class="n">time</span><span class="p">.</span><span class="nf">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-    <span class="c1">#### work ####
-</span>
-    <span class="n">handler</span><span class="p">.</span><span class="nf">disconnect</span><span class="p">()</span> <span class="c1"># loop_stop executed in the connect method
-</span>
-</code></pre></div></div>
-<p><br /><br /></p>
-
-<h2 id="standing-up-a-secure-mosquitto-broker">Standing Up a Secure Mosquitto Broker</h2>
-
-<p>I will provide a high level overview of the steps to run a secure instance of the broker through an AWS EC2 instance:</p>
-
-<h4 id="setup-the-ec2-instance">Setup the EC2 Instance</h4>
-
-<ol>
-  <li>follow the usual steps on the AWS documentation to stand up an EC2 instance of AWS
-    <ul>
-      <li>expose ports 22, 80, 443, 8883 and 1883 (and custom ICMP to echo request for pinging for debugging purposes)</li>
-    </ul>
-  </li>
-  <li>use an existing domain name (or purchase one if you don’t already have one) and go through the domain ownership verification steps</li>
-  <li>generate a Route 53 record that maps the domain to the public IP of the EC2 instance for DNS requests</li>
-  <li>you should now be able to SSH into the EC2 instance</li>
-</ol>
-
-<h4 id="setup-mosquitto-on-ec2-instance">Setup Mosquitto on EC2 Instance</h4>
-
-<ol>
-  <li>setup a firewall to expose the MQTT unsecured port (1883) and HTTP (using ufw to allow 1883, 8883 and http)</li>
-  <li>install mosquitto and generate TLS certs (use certbot)</li>
-  <li>assign the requisite permissions ot the user to access the certs</li>
-  <li>configure user/password authentication for the broker</li>
-  <li>configure mosquitto to use TLS through our new certificates</li>
-  <li>you can now ping the broker locally and remotely</li>
-</ol>
-
-<p><br /><br /></p>
-<h2 id="thanks-for-reading">Thanks for reading!</h2>
 
   </div>
-  
-</div>
-
-<div class="pagination">
-  
-    <span class="pagination-item older">Older</span>
-  
-  
-    <span class="pagination-item newer">Newer</span>
   
 </div>
 

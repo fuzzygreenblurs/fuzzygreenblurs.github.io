@@ -9,5 +9,5 @@ A little bit about myself: over the past nine years, I have worked as a software
 As a side quest, I'm interested in how physical phenomena can be rendered and simulated through software. I am currently working on a simple 2D game physics engine (courtesy of the fantastic [Pikuma course](https://pikuma.com/courses/game-physics-engine-programming) on the subject). If you're interested, you can check out this project and some other ones on this site.
 
 <br>
-### Also I love making new friends! Feel free to [ping me](https://www.linkedin.com/in/akhilsankar/) if you ever feel like a coffee and a chat :)
+### P.S. I love making new friends! Feel free to [ping me](https://www.linkedin.com/in/akhilsankar/) if you ever feel like a coffee and a chat :)
 

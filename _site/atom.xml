@@ -4,7 +4,7 @@
  <title>Akhil Sankar</title>
  <link href="http://localhost:4000/atom.xml" rel="self"/>
  <link href="http://localhost:4000/"/>
- <updated>2024-01-01T18:45:39-05:00</updated>
+ <updated>2024-01-01T18:50:55-05:00</updated>
  <id>http://localhost:4000</id>
  <author>
    <name>Akhil Sankar</name>
@@ -23,7 +23,7 @@
 
 &lt;p style=&quot;text-align: justify&quot;&gt;Over the past nine years, I have worked as a software engineer at different layers of the tech stack (from writing bare metal device drivers to supporting cloud orchestration) in the IoT sector. Most recently, I worked as a Robotics Software Engineer with &lt;a href=&quot;https://www.opshelf.com/&quot;&gt;OpenShelf&lt;/a&gt;, testing a variety of sensor integrations and developing an AWS hosted MQTTS bidirectional telemetry pipeline to remotely monitor and control the physical prototype.&lt;/p&gt;
 
-&lt;p style=&quot;text-align: justify&quot;&gt;As a side quest, I’m interested in how physical phenomena can be rendered and simulated through software. I am currently working on a simple 2D game physics engine (courtesy of the fantastic &lt;a href=&quot;https://pikuma.com/courses/game-physics-engine-programming&quot;&gt;Pikuma course&lt;/a&gt; on the subject). If you’re interested, you can check out this project and some other ones on this site.&lt;/p&gt;
+&lt;p style=&quot;text-align: justify&quot;&gt;As a side quest, I’m interested in how physical phenomena can be rendered and simulated through software. I am currently working on a simple 2D game physics engine (courtesy of the fantastic &lt;a href=&quot;https://pikuma.com/courses/game-physics-engine-programming&quot;&gt;Pikuma course&lt;/a&gt; on the subject). If you’re interested, you can check out this project (and some other ones) over in the &lt;a href=&quot;projects&quot;&gt;Projects&lt;/a&gt; section.&lt;/p&gt;
 
 &lt;p style=&quot;text-align: justify&quot;&gt;Cheers!&lt;/p&gt;
 

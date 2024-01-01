@@ -12,7 +12,7 @@ My name is Akhil and I am a software engineer with a background in mechanical en
 Over the past nine years, I have worked as a software engineer at different layers of the tech stack (from writing bare metal device drivers to supporting cloud orchestration) in the IoT sector. Most recently, I worked as a Robotics Software Engineer with [OpenShelf](https://www.opshelf.com/), testing a variety of sensor integrations and developing an AWS hosted MQTTS bidirectional telemetry pipeline to remotely monitor and control the physical prototype.
 {: style="text-align: justify"}
 
-As a side quest, I'm interested in how physical phenomena can be rendered and simulated through software. I am currently working on a simple 2D game physics engine (courtesy of the fantastic [Pikuma course](https://pikuma.com/courses/game-physics-engine-programming) on the subject). If you're interested, you can check out this project and some other ones on this site.
+As a side quest, I'm interested in how physical phenomena can be rendered and simulated through software. I am currently working on a simple 2D game physics engine (courtesy of the fantastic [Pikuma course](https://pikuma.com/courses/game-physics-engine-programming) on the subject). If you’re interested, you can check out this project (and some other ones) over in the [Projects](projects) section.
 {: style="text-align: justify"}
 
 Cheers!

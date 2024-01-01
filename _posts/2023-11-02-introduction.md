@@ -6,7 +6,7 @@ title: Hello.
 My name is Akhil and I am a software engineer with a background in mechanical engineering. I am primarily experienced in backend engineering  but am interested in transitioning to software engineering opportunities in motion planning, control and their practical implementation on embedded platforms. 
 {: style="text-align: justify"}
 
-*I am therefore currently pursuing an MS with the Rutgers University Electrical and Computer Engineering Department, specializing in Systems and Control*.
+*I am therefore currently pursuing an MS with the Rutgers University Electrical and Computer Engineering Department, specializing in Systems & Control*.
 {: style="text-align: justify"}
 
 Over the past nine years, I have worked as a software engineer at different layers of the tech stack (from writing bare metal device drivers to supporting cloud orchestration) in the IoT sector. Most recently, I worked as a Robotics Software Engineer with [OpenShelf](https://www.opshelf.com/), testing a variety of sensor integrations and developing an AWS hosted MQTTS bidirectional telemetry pipeline to remotely monitor and control the physical prototype.

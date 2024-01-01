@@ -4,7 +4,7 @@
  <title>Akhil Sankar</title>
  <link href="http://localhost:4000/atom.xml" rel="self"/>
  <link href="http://localhost:4000/"/>
- <updated>2024-01-01T18:27:01-05:00</updated>
+ <updated>2024-01-01T18:43:09-05:00</updated>
  <id>http://localhost:4000</id>
  <author>
    <name>Akhil Sankar</name>
@@ -19,7 +19,7 @@
    <id>http://localhost:4000/2023/11/02/introduction</id>
    <content type="html">&lt;p style=&quot;text-align: justify&quot;&gt;My name is Akhil and I am a software engineer with a background in mechanical engineering. I am primarily experienced in backend engineering  but am interested in transitioning to software engineering opportunities in motion planning, control and their practical implementation on embedded platforms.&lt;/p&gt;
 
-&lt;p style=&quot;text-align: justify&quot;&gt;&lt;em&gt;I am therefore currently pursuing an MS with the Rutgers University Electrical and Computer Engineering Department, specializing in Systems and Control&lt;/em&gt;.&lt;/p&gt;
+&lt;p style=&quot;text-align: justify&quot;&gt;&lt;em&gt;I am therefore currently pursuing an MS with the Rutgers University Electrical and Computer Engineering Department, specializing in Systems &amp;amp; Control&lt;/em&gt;.&lt;/p&gt;
 
 &lt;p style=&quot;text-align: justify&quot;&gt;Over the past nine years, I have worked as a software engineer at different layers of the tech stack (from writing bare metal device drivers to supporting cloud orchestration) in the IoT sector. Most recently, I worked as a Robotics Software Engineer with &lt;a href=&quot;https://www.opshelf.com/&quot;&gt;OpenShelf&lt;/a&gt;, testing a variety of sensor integrations and developing an AWS hosted MQTTS bidirectional telemetry pipeline to remotely monitor and control the physical prototype.&lt;/p&gt;
 

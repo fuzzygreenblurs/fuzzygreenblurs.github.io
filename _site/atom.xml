@@ -4,7 +4,7 @@
  <title>Akhil Sankar</title>
  <link href="http://localhost:4000/atom.xml" rel="self"/>
  <link href="http://localhost:4000/"/>
- <updated>2024-01-01T18:50:55-05:00</updated>
+ <updated>2025-01-03T07:07:27+05:30</updated>
  <id>http://localhost:4000</id>
  <author>
    <name>Akhil Sankar</name>
@@ -15,7 +15,7 @@
  <entry>
    <title>Hello.</title>
    <link href="http://localhost:4000/2023/11/02/introduction/"/>
-   <updated>2023-11-02T00:00:00-04:00</updated>
+   <updated>2023-11-02T00:00:00+05:30</updated>
    <id>http://localhost:4000/2023/11/02/introduction</id>
    <content type="html">&lt;p style=&quot;text-align: justify&quot;&gt;My name is Akhil and I am a software engineer with a background in mechanical engineering. I am primarily experienced in backend engineering  but am interested in transitioning to software engineering opportunities in motion planning, control and their practical implementation on embedded platforms.&lt;/p&gt;
 

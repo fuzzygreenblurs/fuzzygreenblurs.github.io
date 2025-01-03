@@ -9,12 +9,12 @@
 
   <title>
     
-      Akhil Sankar &middot; 
+      Linear Kalman Filter &middot; Akhil Sankar
     
   </title>
 
   
-  <link rel="canonical" href="http://localhost:4000/">
+  <link rel="canonical" href="http://localhost:4000/concepts/linear-kalman-filter/">
   
 
   <link rel="stylesheet" href="http://localhost:4000/public/css/poole.css">
@@ -56,9 +56,9 @@
   </div>
 
   <nav class="sidebar-nav">
-    <a class="sidebar-nav-item active" href="http://localhost:4000/">About Me</a>
-    <a class="sidebar-nav-item active" href="/projects">Projects</a>
-    <a class="sidebar-nav-item active" href="/concepts">Concepts</a>
+    <a class="sidebar-nav-item" href="http://localhost:4000/">About Me</a>
+    <a class="sidebar-nav-item" href="/projects">Projects</a>
+    <a class="sidebar-nav-item" href="/concepts">Concepts</a>
 
     <!-- <a class="sidebar-nav-item" href="/archive/v1.1.0.zip">Download</a> -->
     <span class="sidebar-nav-item">Currently v1.1.0</span>
@@ -85,33 +85,27 @@
       </div>
 
       <div class="container content">
-        <div class="posts">
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="http://localhost:4000/2023/11/02/introduction/">
-        Hello.
-      </a>
-    </h1>
+        <div class="page">
+  <h1 class="page-title">Linear Kalman Filter</h1>
+  <p>This page contains details on the Linear Kalman Filter.</p>
 
-    <br></br>
+<h2 id="handwritten-notes">Handwritten Notes</h2>
+<p>\(\sum_{k=1}^n a_k b_k^2 \leq \left( \sum_{k=1}^n a_k^2 \right) \left( \sum_{k=1}^n b_k^2 \right)\)</p>
 
-    <p style="text-align: justify">My name is Akhil and I am a software engineer with a background in mechanical engineering. I am primarily experienced in backend engineering  but am interested in transitioning to software engineering opportunities in motion planning, control and their practical implementation on embedded platforms.</p>
+<h2 id="visuals">Visuals</h2>
+<p><img src="/assets/images/linear-kalman-filter/dummy2.png" alt="Diagram of Least Squares" /></p>
 
-<p style="text-align: justify"><em>I am therefore currently pursuing an MS with the Rutgers University Electrical and Computer Engineering Department, specializing in Systems &amp; Control</em>.</p>
+<h2 id="code-example">Code Example</h2>
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// testing code snippet</span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
 
-<p style="text-align: justify">Over the past nine years, I have worked as a software engineer at different layers of the tech stack (from writing bare metal device drivers to supporting cloud orchestration) in the IoT sector. Most recently, I worked as a Robotics Software Engineer with <a href="https://www.opshelf.com/">OpenShelf</a>, testing a variety of sensor integrations and developing an AWS hosted MQTTS bidirectional telemetry pipeline to remotely monitor and control the physical prototype.</p>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"hello, world"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
-<p style="text-align: justify">As a side quest, I’m interested in how physical phenomena can be rendered and simulated through software. I am currently working on a simple 2D game physics engine (courtesy of the fantastic <a href="https://pikuma.com/courses/game-physics-engine-programming">Pikuma course</a> on the subject). If you’re interested, you can check out this project (and some other ones) over in the <a href="projects">Projects</a> section.</p>
-
-<p style="text-align: justify">Cheers!</p>
-
-<p style="text-align: justify"><br />
-<em>P.S. I love making new friends. Feel free to <a href="https://www.linkedin.com/in/akhilsankar/">ping me</a> if you ever feel like a coffee and a chat :)</em></p>
-
-
-  </div>
-  
 </div>
 
       </div>

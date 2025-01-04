@@ -9,7 +9,7 @@
 
   <title>
     
-      Least Squares Estimation &middot; Akhil Sankar
+      Least Squares Estimation (LSE) &middot; Akhil Sankar
     
   </title>
 
@@ -86,25 +86,178 @@
 
       <div class="container content">
         <div class="page">
-  <h1 class="page-title">Least Squares Estimation</h1>
-  <p>This page contains details on Least Squares Estimation, including handwritten notes, LaTeX, visuals, and simulations.</p>
+  <h1 class="page-title">Least Squares Estimation (LSE)</h1>
+  <h2 id="high-level-strategy">High Level Strategy</h2>
 
-<h2 id="handwritten-notes">Handwritten Notes</h2>
-<p>\(\sum_{k=1}^n a_k b_k^2 \leq \left( \sum_{k=1}^n a_k^2 \right) \left( \sum_{k=1}^n b_k^2 \right)\)</p>
+<p>Suppose you have two points on the x-y plane and you want to find a line that fits the two points. This is easy enough to do using the standard approach of calculating the slope of the line (m = ∆y/∆x) and then using one of the points to calculate the point-slope form of the line: 
+\(y - y_i = b(x - x_i)\) where \((x_i, y_i)\) can be the coordinates of either of the points.</p>
 
-<h2 id="visuals">Visuals</h2>
-<p><img src="/assets/images/least-squares/dummy1.png" alt="Diagram of Least Squares" /></p>
+<p>In real-life however, we might have many more than two points, and they will most likely <strong>not</strong> all fall along the same line. However, we might still want to find a line that models the dataset most accurately. In other words, we want to find the <em>line that best fits the dataset</em>.</p>
 
-<h2 id="code-example">Code Example</h2>
-<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// testing code snippet</span>
-<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
-</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<p>How can we do this mathematically?</p>
 
-<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"hello, world"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
+<p>One way to quantify “accuracy” might be to consider the error or “residual” between each point and the best-fit line. By adding up all the residual components, we can determine the overall error (also called the cost) of the line with respect to the dataset. We can then try to minimize this overall error in some systematic way, proving that we have derived the optimal or best-fit linear model of the dataset.</p>
+
+<p>Let’s add one additional layer of complexity to this approach: instead of simply considering the residual as the raw error between the point and the model at a given x-coordinate, we will consider the <strong>square of each residual</strong> (hence the name Least Squares Estimate). There are a few advantages to this approach:</p>
+
+<ul>
+  <li><strong>penalize larger errors more</strong>: by squaring, we are amplifying the impact of large errors compared to small ones.</li>
+  <li><strong>ensure positive error</strong>: since we only care about minimizing overall error, we want to consider the magnitude of each residual component.</li>
+  <li><strong>differentiable expression of cost</strong>: the square of the residuals yields a smooth parabolic function. We will explore why this is ideal.</li>
+</ul>
+
+<p>Suppose we have \(k\) points in our dataset, such that the coordinates of each point can be given by \((x_i, y_i)\). Lets also say that the linear model is given by the expression \(y = bx\). For simplicity, we will start with a model that has a zero y-intercept. Here, the green dots represent the actual points of the dataset with corresponding coordinates. The blue line is our linear model of the data</p>
+
+<p><img src="/assets/images/least-squares/residuals.png" alt="Diagram of Residuals" /></p>
+
+<p>The above sketch uses red shaded boxes to visualize the square of residuals \((r_1^2, r_2^2, ..., r_k^2)\) where each residual is given by:</p>
+
+\[\begin{aligned}
+    r_1 &amp;= bx_1 - y_1 \\ 
+    r_2 &amp;= bx_2 - y_2 \\ 
+    &amp;\vdots \\ 
+    r_k &amp;= bx_k - y_k
+\end{aligned}\]
+
+<p>So, we can now calculate the overall error of the model as the sum of the squares of these residuals:</p>
+
+\[Error = r_1^2 + r_2^2 + ... + r_k^2\]
+
+<p>Looking at this expression more closely by expanding out each residual term, we notice that <code class="language-plaintext highlighter-rouge">Error</code> is a function of the <code class="language-plaintext highlighter-rouge">b</code> parameter of our linear model. Thus, if we can find the value of <code class="language-plaintext highlighter-rouge">b</code> such that <code class="language-plaintext highlighter-rouge">Error</code> is minimized, we have derived a specific expression for the best-fit linear model for our dataset.</p>
+
+<h2 id="is-this-error-function-guaranteed-to-have-a-global-minimum">Is this Error function guaranteed to have a global minimum?</h2>
+
+<p>We went through the trouble of ensuring our error function is quadratic and therefore has a parabolic profile. In general parabolic function can have a global maximum or a global minimum. For our purposes, we only care about <em>minimizing</em> error: thus, we want our error function to be guaranteed to have a global minimum value. How can we show that this is always the case?</p>
+
+<p><img src="/assets/images/least-squares/global_minimum.png" alt="Diagram of Global Minimum Error" /></p>
+
+<p>To show this is true, lets start by expanding out the Error function first, and group terms by the <code class="language-plaintext highlighter-rouge">b</code> variable:</p>
+
+\[Error = (bx_1 - y_1)^2 + (bx_2 - y_2)^2 + \dots + (bx_k - y_k)^2\]
+
+\[\quad \Rightarrow \quad \big[ b^2x_1^2 + y_1^2 - 2bx_1y_1 \big] + \big[ b^2x_2^2 + y_2^2 - 2bx_2y_2 \big] + \dots + \big[ b^2x_k^2 + y_k^2 - 2bx_ky_k \big]\]
+
+\[\quad \Rightarrow \quad \big[ x_1^2 + x_2^2 + \dots + x_k^2 \big]b^2 - 2 \big[ x_1y_1 + x_2y_2 + \dots + x_ky_k \big]b + \big[ y_1^2 + y_2^2 + \dots + y_k^2 \big]\]
+
+<p>where the first term: \(\big[ x_1^2 + x_2^2 + \dots + x_k^2 \big]b^2\) is made up of squared values summed together, ensuring that the total will be positive.</p>
+
+<p>Thus, our Error term can be written as a parabolic expression where the 2nd order term has a positive coefficient. In general, this means that the parabola is convex and will have a global minimum. This is ideal because it is relatively easy to compute and there are no edge cases to consider.</p>
+
+<h2 id="calculating-the-corresponding-value-of-b">Calculating the Corresponding Value of \(b\)</h2>
+
+<p>Taking a step back, lets recall what we are doing.</p>
+
+<p>We want to determine the value of \(b\) (the slope) for our linear model that guarantees the model will be the best-fit for our given dataset. We now have an error function (also called a cost function) represented
+as a convex parabolic function which is dependent on \(b\). We can therefore calculate the value of \(b\) for which the Error value is minimized.</p>
+
+<p>For a parabola, the critical points (minimum or maximum) are located when the derivative of the function is 0. Since the function is convex parabolic, we know there is exactly one global minimum and there are
+no other critical points (such as saddle points found in higher order functions).</p>
+
+<p>Thus, if we can find the optimal value \(b_{\text{opt}}\) such that the derivative of the Error function \(\frac{d \text{Error}}{db} = 0\), we are done. The linear model \(y = b_{\text{opt}}x\) will be guaranteed to be the best fit for the dataset.</p>
+
+<p>So lets calculate the derivative of the Error function:</p>
+
+\[\frac{d \text{Error}}{db} = 0 \quad \Rightarrow \quad 
+2b \Big[ x_1^2 + x_2^2 + \dots + x_k^2 \Big] - 2 \Big[ x_1y_1 + x_2y_2 + \dots + x_ky_k \Big] = 0\]
+
+<p>Solving for \(b_{\text{opt}}\):</p>
+
+\[b_{\text{opt}} = \frac{\Big[ x_1y_1 + x_2y_2 + \dots + x_ky_k \Big]}{\Big[ x_1^2 + x_2^2 + \dots + x_k^2 \Big]}\]
+
+<p>Now our linear model \(y = b_{\text{opt}}x\) is guaranteed to be the best-fit for our dataset.</p>
+
+<h2 id="least-squares-estimation-the-more-general-case">Least Squares Estimation: The More General Case</h2>
+
+<p>Let’s now consider the more general case of a linear model that is comprised of a slope <em>and</em> a y-intercept. This is more realistic since datasets in the real-world might also introduce a constant bias that can be modeled as an offset in the y-axis.</p>
+
+<p>So our model now looks like:</p>
+
+\[y = bx + a\]
+
+<p>where \(a\) represents the y-intercept of the model.</p>
+
+<p>Let’s redraw our dataset, model and residuals:</p>
+
+<p><img src="/assets/images/least-squares/general_lse_model.png" alt="Diagram of Global Minimum Error" /></p>
+
+<p>Once again, we have a system of residual equations (one equation for each of the \(k\) datapoints). This system can be more compactly represented using matrix-vector notation. In addition, matrix-vector notation gives us a variety of useful tools to analyze characteristics of the system as well. For now, let’s start by putting the system in this notation:</p>
+
+\[\begin{bmatrix}
+r_1 \\
+r_2 \\
+\vdots \\
+r_k
+\end{bmatrix}_{k \times 1}
+=
+\begin{bmatrix}
+1 &amp; x_1 \\
+1 &amp; x_2 \\
+\vdots &amp; \vdots \\
+1 &amp; x_k
+\end{bmatrix}_{k \times 2}
+\begin{bmatrix}
+a \\
+b
+\end{bmatrix}_{2 \times 1}
+-
+\begin{bmatrix}
+y_1 \\
+y_2 \\
+\vdots \\
+y_k
+\end{bmatrix}_{k \times 1}\]
+
+<p>Here, \(b\) and \(a\) represent the slope and y-intercept parameters respectively of our attempted linear model for this dataset. Ultimately, we are trying to solve for these to generate the best-fit linear model of the dataset.</p>
+
+<p>This notation can be written even more compactly by renaming these matrices and vectors:</p>
+
+\[\quad \bar{R} = H \bar{X} - \bar{Y} \quad
+% \quad \bar{R} = H \bar{X} - \bar{Y} \quad \tag{1}\]
+
+<p>Note: vectors are denoted by bar notation. Thus a vector V is denoted as \(\bar{V}\) in these notes.</p>
+
+<p>Once again, we will need a cost function based on the overall error against which we can optimize our model parameters. The structure of our cost function does not change from our previous LSE case.</p>
+
+\[Error = r_1^2 + r_2^2 + ... +  r_k^2\]
+
+<p>This error function can also be written compactly in matrix-vector notation:</p>
+
+\[R =
+\begin{bmatrix}
+r_1 \\
+r_2 \\
+\vdots \\
+r_k
+\end{bmatrix},
+\quad
+R^T =
+\begin{bmatrix}
+r_1 &amp; r_2 &amp; \dots &amp; r_k
+\end{bmatrix}.\]
+
+<p>so that \(\text{Error} = R^T R \text{ :}\)</p>
+
+\[R^T R =
+\begin{bmatrix}
+r_1 &amp; r_2 &amp; \dots &amp; r_k
+\end{bmatrix}
+\begin{bmatrix}
+r_1 \\
+r_2 \\
+\vdots \\
+r_k
+\end{bmatrix}
+=
+r_1^2 + r_2^2 + \dots + r_k^2.\]
+
+<p>Now that we have the overall error expression, lets once again find the global minimum of the Error function. However, this time, the error is dependent on two variables: \(b\) (slope) and \(a\) (y-intercept).</p>
+
+<p>In the diagram below, the x-axis and y-axis represent the slope and y-intercept independent variables, and the z-axis (vertical) is the error value. Thus, the error function can be visualized as a 3D shape (paraboloid) with a global mininum:</p>
+
+<p><img src="/assets/images/least-squares/multivariable_global_min.png" alt="Diagram of Global Minimum Error wrt 2 Variables" /></p>
+
+<p>The intuition to find the global minimum is very similar; we simply need to find the point where the derivative of the error is 0 with respect to the slope and with respect to the y-intercept. Mathematically, each of these conditions can be represented by taking the partial derivative of the Error with respect to each of these variables:</p>
+
 
 </div>
 

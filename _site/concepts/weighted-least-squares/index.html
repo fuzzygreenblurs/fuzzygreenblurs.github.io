@@ -258,6 +258,34 @@
 
 <p>This looks very similar to the regular LSE solution, except we are now inversely scaling by the variance of each datapoint. This represents the “weighted” component of the LSE.</p>
 
+<h3 id="how-does-dataset-uncertainty-propogate-to-model-uncertainty">How does Dataset Uncertainty Propogate to Model Uncertainty?</h3>
+
+<p>Given the stochastic element in our datapoints \(\bar{Y}\), we will also have a stochastic element in \(\bar{X}\), our model parameters. Intuitively, we can think of the model parameters as now being more “fuzzy”. This fuzziness can be represented using an uncertainty.</p>
+
+<p>To determine this output uncertainty, lets start with our weighted LSE expression for \(\bar{X}\):</p>
+
+\[\bar{X} = (H^T C^{-1} H)^{-1} H^T C^{-1} \bar{Y}\]
+
+<p>We can rewrite this expression in the form \(\bar{X} = A \bar{Y}\) such that:</p>
+
+\[A = (H^T C^{-1} H)^{-1} H^T C^{-1} \tag{6}\]
+
+<p>Next, let us consider the general Transformation of Uncertainty, such that for a function \(f = Ax\), if we know the uncertainty of \(x\) (called \(\Sigma_x\)), then we can work out the uncertainty of \(f\) (called \(\Sigma_f\)):</p>
+
+\[\Sigma_f = A \Sigma_x A^T\]
+
+<p>We can apply this same approach to our weighted LSE expression. We know the uncertainty of \(\bar{Y}\) to be its covariance matrix \(C\). We have also defined the \(A\) matrix in \((6)\). Thus:</p>
+
+\[\Sigma_{\bar{X}} = A \Sigma_{\bar{Y}} A^T\]
+
+<p>For more consistent notation in these notes, we will refer to \(\Sigma_{\bar{X}}\) as \(P\), the uncertainty matrix of \(\bar{X}\), our optimal model parameters. Thus, \(P\) can be expressed as:</p>
+
+\[P = ACA^T\]
+
+<p>If we then expand \(A\) from \((6)\), we are finally left with:</p>
+
+\[\boxed{ P = (H^T C^{-1} H)^{-1} }\]
+
 
 </div>
 

@@ -145,15 +145,13 @@
 
 <h2 id="calculating-the-corresponding-value-of-b">Calculating the Corresponding Value of \(b\)</h2>
 
-<p>Taking a step back, lets recall what we are doing.</p>
+<p><span style="color:red">Big Picture: Taking a step back, lets recall what we are doing: </span></p>
 
-<p>We want to determine the value of \(b\) (the slope) for our linear model that guarantees the model will be the best-fit for our given dataset. We now have an error function (also called a cost function) represented
-as a convex parabolic function which is dependent on \(b\). We can therefore calculate the value of \(b\) for which the Error value is minimized.</p>
+<p><span style="color:red"> We want to determine the value of \(b\) (the slope) for our linear model that guarantees the model will be the best-fit for our given dataset. We now have an error function (also called a cost function) represented as a convex parabolic function which is dependent on \(b\). <span style="color:red"></span></span></p>
 
-<p>For a parabola, the critical points (minimum or maximum) are located when the derivative of the function is 0. Since the function is convex parabolic, we know there is exactly one global minimum and there are
-no other critical points (such as saddle points found in higher order functions).</p>
+<p><span style="color:red">We can therefore calculate the value of \(b\) for which the Error value is minimized. For a parabola, the critical points (minimum or maximum) are located when the derivative of the function is 0. Since the function is convex parabolic, we know there is exactly one global minimum and there are no other critical points (such as saddle points found in higher order functions).</span></p>
 
-<p>Thus, if we can find the optimal value \(b_{\text{opt}}\) such that the derivative of the Error function \(\frac{d \text{Error}}{db} = 0\), we are done. The linear model \(y = b_{\text{opt}}x\) will be guaranteed to be the best fit for the dataset.</p>
+<p><span style="color:red">Thus, if we can find the optimal value \(b_{\text{opt}}\) such that the derivative of the Error function \(\frac{d \text{Error}}{db} = 0\), we are done. The linear model \(y = b_{\text{opt}}x\) will be guaranteed to be the best fit for the dataset.</span></p>
 
 <p>So lets calculate the derivative of the Error function:</p>
 
@@ -205,14 +203,15 @@ y_1 \\
 y_2 \\
 \vdots \\
 y_k
-\end{bmatrix}_{k \times 1}\]
+\end{bmatrix}_{k \times 1}
+\tag{1}\]
 
 <p>Here, \(b\) and \(a\) represent the slope and y-intercept parameters respectively of our attempted linear model for this dataset. Ultimately, we are trying to solve for these to generate the best-fit linear model of the dataset.</p>
 
 <p>This notation can be written even more compactly by renaming these matrices and vectors:</p>
 
-\[\quad \bar{R} = H \bar{X} - \bar{Y} \quad
-% \quad \bar{R} = H \bar{X} - \bar{Y} \quad \tag{1}\]
+\[% \quad \bar{R} = H \bar{X} - \bar{Y} \quad
+\quad \bar{R} = H \bar{X} - \bar{Y} \quad \tag{2}\]
 
 <p>Note: vectors are denoted by bar notation. Thus a vector V is denoted as \(\bar{V}\) in these notes.</p>
 
@@ -257,6 +256,74 @@ r_1^2 + r_2^2 + \dots + r_k^2.\]
 <p><img src="/assets/images/least-squares/multivariable_global_min.png" alt="Diagram of Global Minimum Error wrt 2 Variables" /></p>
 
 <p>The intuition to find the global minimum is very similar; we simply need to find the point where the derivative of the error is 0 with respect to the slope and with respect to the y-intercept. Mathematically, each of these conditions can be represented by taking the partial derivative of the Error with respect to each of these variables:</p>
+
+\[\frac{\partial \text{Error}}{\partial a} = 0 \quad \Rightarrow \quad 
+2r_1 \frac{\partial r_1}{\partial a} + 2r_2 \frac{\partial r_2}{\partial a} + \dots + 2r_k \frac{\partial r_k}{\partial a} = 0\]
+
+\[\frac{\partial \text{Error}}{\partial b} = 0 \quad \Rightarrow \quad 
+2r_1 \frac{\partial r_1}{\partial b} + 2r_2 \frac{\partial r_2}{\partial b} + \dots + 2r_k \frac{\partial r_k}{\partial b} = 0\]
+
+\[\Rightarrow
+\begin{bmatrix}
+0 \\
+0
+\end{bmatrix}
+=
+\begin{bmatrix}
+\frac{\partial r_1}{\partial a} &amp; \frac{\partial r_2}{\partial a} &amp; \dots &amp; \frac{\partial r_k}{\partial a} \\
+\frac{\partial r_1}{\partial b} &amp; \frac{\partial r_2}{\partial b} &amp; \dots &amp; \frac{\partial r_k}{\partial b}
+\end{bmatrix}
+\begin{bmatrix}
+r_1 \\
+r_2 \\
+\vdots \\
+r_k
+\end{bmatrix}
+\tag{3}\]
+
+<p>Considering the residual error of a given datapoint \(r_i\) more closely:
+\(r_i = (b x_i + a) - y_i \quad \Rightarrow \quad 
+\frac{\partial r_i}{\partial a} = 1, \quad \frac{\partial r_i}{\partial b} = x_i\)</p>
+
+<p>Thus, we can substitute these expressions for the partial derivative terms for the entire system in \((3)\) as follows:</p>
+
+\[\Rightarrow
+\begin{bmatrix}
+0 \\
+0
+\end{bmatrix}
+=
+\begin{bmatrix}
+1 &amp; 1 &amp; \dots &amp; 1 \\
+x_1 &amp; x_2 &amp; \dots &amp; x_k
+\end{bmatrix}
+\begin{bmatrix}
+r_1 \\
+r_2 \\
+\vdots \\
+r_k
+\end{bmatrix}
+\tag{4}\]
+
+<p><span style="color:red">Big Picture: we want to derive the optimal values of the slope \(b\) and y-intercept \(a\) parameters of our linear model. Earlier in this section, we derived a relationship between the residuals and these parameters, as seen in \((2)\). We can take advantage of this.</span></p>
+
+<p>Note that the multiplier matrix term of the residuals vector in \((4)\) is very similar to the matrix multiplier term \(\bar{H}\) for the model parameters in \((1)\). In fact, they are transposes of each other.</p>
+
+<p>Thus, we can rewrite \((4)\) in matrix-vector form using this notation:</p>
+
+\[\bar{0} = H^T\bar{R}
+\tag{5}\]
+
+<p>Substituting for \(\bar{R}\) from \((2)\), \((5)\) now becomes:</p>
+
+\[\quad \bar{0} = H^T(H \bar{X} - \bar{Y})
+\quad \Rightarrow H^TH \bar{X} - H^T\bar{Y}\]
+
+<p>The final step is to solve for \(\bar{X}\) (our best-fit linear model parameters):</p>
+
+\[\quad \Rightarrow \boxed{\bar{X} = (H^TH)^{-1}(H^T\bar{Y})}\]
+
+<p><strong>This is the general solution for the LSE of the best-fit line for a given dataset.</strong></p>
 
 
 </div>

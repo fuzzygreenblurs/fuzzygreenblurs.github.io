@@ -6,11 +6,24 @@ permalink: /concepts/
 
 <br>
 
-## 2D Vehicle Filter: State Estimation
+### General Purpose Concepts
 
 - [Least Squares Estimation](/concepts/least-squares/)
+- [Weighted Least Squares Estimation](/concepts/weighted-least-squares/)
+
+### State Estimation
 - [Linear Kalman Filter](/concepts/linear-kalman-filter/)
 - [Extended Kalman Filter](/concepts/extended-kalman-filter/)
 - [Unscented Kalman Filter](/concepts/unscented-kalman-filter/)
+
+<!-- ### Embedded Systems -->
+<!-- - all the interview questions -->
+
+<!-- ### C++ Concepts -->
+
+<!-- ### Machine Learning -->
+
+
+
 
 <br>

@@ -154,12 +154,12 @@ r_1 \\
 r_2 \\
 \vdots \\
 r_k
-\end{bmatrix},
+\end{bmatrix}_{k \times 1},
 \quad
 R^T =
 \begin{bmatrix}
 r_1 & r_2 & \dots & r_k
-\end{bmatrix}.
+\end{bmatrix}_{1 \times k}
 $$
 
 so that $$ \text{Error} = R^T R \text{ :}$$
@@ -168,15 +168,15 @@ $$
 R^T R =
 \begin{bmatrix}
 r_1 & r_2 & \dots & r_k
-\end{bmatrix}
+\end{bmatrix}_{1 \times k}
 \begin{bmatrix}
 r_1 \\
 r_2 \\
 \vdots \\
 r_k
-\end{bmatrix}
+\end{bmatrix}_{k \times 1}
 =
-r_1^2 + r_2^2 + \dots + r_k^2.
+r_1^2 + r_2^2 + \dots + r_k^2
 $$
 
 Now that we have the overall error expression, lets once again find the global minimum of the Error function. However, this time, the error is dependent on two variables: $$b$$ (slope) and $$a$$ (y-intercept). 

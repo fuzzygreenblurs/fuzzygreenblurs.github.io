@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Weighted Least Squares Estimation (LSE) &middot; Akhil Sankar
+    
+  </title>
+
+  
+  <link rel="canonical" href="http://localhost:4000/concepts/weighted-least-squares/">
+  
+
+  <link rel="stylesheet" href="http://localhost:4000/public/css/poole.css">
+  <link rel="stylesheet" href="http://localhost:4000/public/css/syntax.css">
+  <link rel="stylesheet" href="http://localhost:4000/public/css/lanyon.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://localhost:4000/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="http://localhost:4000/public/favicon.ico">
+
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="http://localhost:4000/atom.xml">
+
+  
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-XXXX-Y', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <script type="text/javascript" async
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js">
+  </script>
+  
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <p>A reserved <a href="https://jekyllrb.com" target="_blank">Jekyll</a> theme that places the utmost gravity on content with a hidden drawer. Made by <a href="https://twitter.com/mdo" target="_blank">@mdo</a>.</p>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="http://localhost:4000/">About Me</a>
+    <a class="sidebar-nav-item" href="/projects">Projects</a>
+    <a class="sidebar-nav-item" href="/concepts">Concepts</a>
+
+    <!-- <a class="sidebar-nav-item" href="/archive/v1.1.0.zip">Download</a> -->
+    <span class="sidebar-nav-item">Currently v1.1.0</span>
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2025. All rights reserved.
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">Akhil Sankar</a>
+            <small></small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="page">
+  <h1 class="page-title">Weighted Least Squares Estimation (LSE)</h1>
+  <h3 id="high-level-strategy">High Level Strategy</h3>
+
+<p>Suppose we want to perform the same exercise of finding the the best-fit linear model for a given dataset as seen in <a href="/concepts/least-squares/">Least Squares Estimation</a> . This time however, let’s also suppose each point in the dataset has some inherent uncertainty.</p>
+
+<p>First of all, what does that mean?</p>
+
+<p><span style="color:green">Practical Example: Suppose we have an engine with a non-ideal temperature sensor attached to it. The engine gets hotter with increased RPMs. The engine should always be at the same temperature for the same RPM value, called the true temperature. However, the temperature sensor is non-deterministic, and also has some inherent error. </span></p>
+
+<p><span style="color:green"> This means that it will potentially measure a different value than the true temperature at a given RPM, within some statistical range of error. Given its operating range and other conditions, this range might be larger or smaller at different RPMs. </span></p>
+
+<p>Graphically, we can generally represent this kind of relationship like so:</p>
+
+<p><img src="/assets/images/weighted-least-squares/range_of_uncertainty.png" alt="Range of Uncertainty" /></p>
+
+<p>This diagram looks very similar to that of the general case of the linear best-fit model from the general <a href="/concepts/least-squares/">Least Squares Estimation</a> problem statement. However, note that each data point \((x_i, y_i)\) now has a range of uncertainty \(\sigma_i\). This is saying that \(y_i\) could also fall somewhere in that range for the same value \(x_i\).</p>
+
+<p>Intuitively, \(y_i\) can be thought of as the mean measurement value of a sensor over several readings and \(\sigma_i\) describes the range of values that the measurement could fall within across all the readings.</p>
+
+<p>Next, our linear model can be written as:</p>
+
+\[y = bx + a\]
+
+<p>We can then determine an expressions for the residual error at a given point \(x_i\) in the same fashion as the general <a href="/concepts/least-squares/">Least Squares Estimation</a> approach:</p>
+
+\[r_i = (bx_i + a) - y_i\]
+
+<p>which can also be written as:</p>
+
+\[y_i = (bx_i + a) + r_i\]
+
+<p>Note: the sign changes can be reconciled when the constants are actually calculated. Intuitively, this is generally saying that the value of a given data point is the sum of the model output and the residual error between the data point and the model.</p>
+
+<p>Then, our residuals across all the datapoints can be written in matrix-vector form as a system of equations:</p>
+
+\[\begin{aligned}
+    r_1 &amp;= (bx_1 + a) - y_1 \\ 
+    r_2 &amp;= (bx_2 + a) - y_2 \\ 
+    &amp;\vdots \\ 
+    r_k &amp;= (bx_k + a) - y_k
+\end{aligned}\]
+
+<h3 id="aside-random-variables-and-modeling-stochasticity">Aside: Random Variables and Modeling Stochasticity</h3>
+
+<p>Since we have these notions of means, ranges of uncertainty and non-determinism/randomness, we need some way to work with them mathematically within our model. We can use <strong>random variables</strong> to handle these notions.</p>
+
+<p>Random variables are used to mathematically express stochastic outcomes as real numbers like so:</p>
+
+\[x : S \rightarrow E\]
+
+<p>What is this notation?</p>
+
+<ul>
+  <li>\(x\) is our random variable and can be any real number within the set \(E\)</li>
+  <li>\(S\) is the set that contains all the possible outcomes of an experiment</li>
+  <li>\(E\) is the set containing all real numbers that can be mapped from the set \(S\)</li>
+  <li>Note: once the experiment is carried out, the value of \(x\) has been determined and can be treated as a regular algebraic value thereafter</li>
+</ul>
+
+<p>Next, lets consider the <strong>Expectation Operator</strong>:</p>
+
+<p>The Expectation Operator \(E(x)\) yields the mean value of the random variable \(x\).</p>
+
+<p>In our considered scenario, the datapoints are stochastic in nature (i.e. having a random probability distribution or pattern that may be analysed statistically but may not be predicted precisely.) we can treat each point as a random variable and apply the Expected Operator to it:</p>
+
+<p><span style="color:red">#TODO: do these properties make sense? </span></p>
+
+<ul>
+  <li>\(E(\bar{R}) = 0\) : unbiased, white noise
+    <ul>
+      <li>mean of the noise (or residual error) across all datapoints is 0</li>
+    </ul>
+  </li>
+  <li>\(E({r_i}{r_j}^T) = 0\) : no correlation between datapoints
+    <ul>
+      <li>mean of the covariance between any two datapoints is 0</li>
+    </ul>
+  </li>
+</ul>
+
+<p>As an extension of the above property, we can generate a covariance matrix \(C\), which shows that there is no correlation between the datapoints or between their variances (ranges of uncertainty).</p>
+
+\[C = E({r_i}{r_i^T}) =
+\begin{bmatrix}
+\sigma_1^2 &amp; 0 &amp; \dots &amp; 0 \\
+0 &amp; \sigma_2^2 &amp; \dots &amp; 0 \\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+0 &amp; 0 &amp; \dots &amp; \sigma_k^2
+\end{bmatrix}\]
+
+<h3 id="returning-to-the-weighted-lse-problem">Returning to the Weighted LSE Problem</h3>
+
+<p>Similar to our approach of minimizing error as seen in <a href="/concepts/least-squares/">Least Squares Estimation</a>, we want to derive an appropriate cost function for the weighted LSE problem based on the overall error (sum of all residuals). However, this time we have datapoints of varying accuracy. Some datapoints could be very noisy, and therefore could even be completely useless. We therefore want our best-fit model to bias towards the datapoints in which we have the greatest confidence.</p>
+
+<p>The simplest way to do this is to inversely scale each component (the residual error of each datapoint) of the overall error  based on the uncertainty of that datapoint. The most accurate measurements will therefore be given the greatest weight:</p>
+
+\[\text{Error} = \frac{r_1^2}{\sigma_1^2} + \frac{r_2^2}{\sigma_2^2} + \dots + \frac{r_k^2}{\sigma_k^2} \tag{1}\]
+
+<p>We can also note that \(C\) is a diagonal matrix. Thus, its inverse is easily calculated as:</p>
+
+\[C^{-1} =
+\begin{bmatrix}
+\frac{1}{\sigma_1^2} &amp; 0 &amp; \dots &amp; 0 \\
+0 &amp; \frac{1}{\sigma_2^2} &amp; \dots &amp; 0 \\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+0 &amp; 0 &amp; \dots &amp; \frac{1}{\sigma_k^2}
+\end{bmatrix}\]
+
+<p>In matrix-vector form, our error function \((1)\) can be written as:</p>
+
+\[\text{Error} = R^T C^{-1} R \tag{2}\]
+
+<p>Note: to see where this expression comes from, see how the Error function is written in matrix-vector form as a sum of unbiased residual components in <a href="/concepts/least-squares/">Least Squares Estimation</a>. We are simply using the \(C^{-1}\) matrix to perform the division operation for each residual component here.</p>
+
+<p><span style="color:red">We now want to put the Error function in terms of \(\bar{X}\) so that we can ultimately solve for \(\bar{X}\). </span></p>
+
+<p>From <a href="/concepts/least-squares">Least Squares Estimation \((2)\)</a>, recall that:</p>
+
+\[% \quad \bar{R} = H \bar{X} - \bar{Y} \quad
+\quad \bar{R} = H \bar{X} - \bar{Y} \quad\]
+
+<p>Thus, our error function \((2)\) can be expanded out by substituting for \(\bar{R}\):</p>
+
+\[\text{Error} = (H \bar{X} - \bar{Y})^T C^{-1} (H \bar{X} - \bar{Y})\]
+
+\[\quad \Rightarrow (H \bar{X})^T C^{-1} (H \bar{X}) - (H \bar{X})^T C^{-1} \bar{Y} - \bar{Y}^T C^{-1} (H \bar{X})  + \bar{Y}^T C^{-1} \bar{Y}\quad \tag{3}\]
+
+<p>Note that the middle two terms in the above expression are the transposes of each other:</p>
+
+\[(H \bar{X})^T C^{-1} \bar{Y} = \big[\bar{Y}^T C^{-1} (H \bar{X})) \big]^T\]
+
+<p>If we consider one of these terms further from a dimensional standpoint, we notice that the matrix multiplication yields a scalar value:</p>
+
+\[(H_{k \times 2} \bar{X}_{2 \times 1})^T C^{-1}_{k \times k} \bar{Y}_{k \times 1} \Rightarrow \text{Scalar}_{1 \times 1}\]
+
+<p>and the transpose of a scalar is simply the scalar itself: \(\text{Scalar}^T = \text{Scalar}\)</p>
+
+<p>Thus, we can simply combine the middle two terms in \((3)\) by simply doubling the second of the middle terms like so:</p>
+
+\[2(-\bar{Y}^{T}C^{-1}(H\bar{X})) \Rightarrow -2\bar{Y}^{T}C^{-1}(H\bar{X})\]
+
+<p>Our error function can now be condensed into:</p>
+
+\[\text{Error} = (H \bar{X})^T C^{-1} (H \bar{X}) 
+- 2 \bar{Y}^T C^{-1} (H \bar{X}) 
++ \bar{Y}^T C^{-1} \bar{Y} \tag{4}\]
+
+<h3 id="deriving-the-best-fit-model-parameters-barx">Deriving the Best-Fit Model Parameters \(\bar{X}\)</h3>
+
+<p>To derive the best-fit model parameters, we want to minimize the overall Error. We therefore follow a similar approach to <a href="/concepts/least-squares">Least Squares Estimation \((2)\)</a>, by deriving the partial derivative of Error with respect to the \(\bar{X}\) and setting it equal to 0.</p>
+
+<p>This will yield the optimal \(\bar{X}\) vector.</p>
+
+\[\Rightarrow \frac{\partial \text{Error}}{\partial \bar{X}} = 0
+\Rightarrow \frac{\partial}{\partial \bar{X}} \left( \bar{X}^T H^T C^{-1} H \bar{X} \right) - 2 \bar{Y}^T C^{-1} H\]
+
+\[\Rightarrow 0 = 2 \bar{X}^T H^T C^{-1} H - 2 \bar{Y}^T C^{-1} H\]
+
+\[\Rightarrow 0 = \bar{X}^T H^T C^{-1} H - \bar{Y}^T C^{-1} H \tag{5}\]
+
+<p>Lastly, we can solve for \(\bar{X}\) in \((5)\):</p>
+
+\[\quad \Rightarrow 0 = -\bar{Y}^T C^{-1} H + \bar{X}^T H^T C^{-1} H \quad\]
+
+\[\quad \Rightarrow 0 = -H^T C^{-1} \bar{Y} + H^T C^{-1} H \bar{X} \quad\]
+
+<p>This yields our final optimized model parameters:</p>
+
+\[\Rightarrow \boxed{ \bar{X} = (H^T C^{-1} H)^{-1} H^T C^{-1} \bar{Y} }\]
+
+<p>This looks very similar to the regular LSE solution, except we are now inversely scaling by the variance of each datapoint. This represents the “weighted” component of the LSE.</p>
+
+
+</div>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script src='/public/js/script.js'></script>
+  </body>
+</html>

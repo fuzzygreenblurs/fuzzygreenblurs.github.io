@@ -10,6 +10,7 @@ permalink: /concepts/
 
 - [Least Squares Estimation](/concepts/least-squares/)
 - [Weighted Least Squares Estimation](/concepts/weighted-least-squares/)
+- [Recursive Least Squares Estimation](/concepts/recursive-least-squares/)
 
 ### State Estimation
 - [Linear Kalman Filter](/concepts/linear-kalman-filter/)

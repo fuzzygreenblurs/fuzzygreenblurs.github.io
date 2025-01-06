@@ -60,6 +60,10 @@
 .highlight .vi { color: #033 } /* Name.Variable.Instance */
 .highlight .il { color: #f60 } /* Literal.Number.Integer.Long */
 
+/* manually edited parameters */
+body            { text-align: justify; font-family: "Arial", sans-serif;}
+/* manually edited parameters */
+
 .css .o,
 .css .o + .nt,
 .css .nt + .nt { color: #999; }

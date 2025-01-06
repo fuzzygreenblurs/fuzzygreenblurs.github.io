@@ -87,24 +87,103 @@
       <div class="container content">
         <div class="page">
   <h1 class="page-title">Linear Kalman Filter</h1>
-  <p>This page contains details on the Linear Kalman Filter.</p>
+  <h3 id="high-level-context">High Level Context</h3>
 
-<h2 id="handwritten-notes">Handwritten Notes</h2>
-<p>\(\sum_{k=1}^n a_k b_k^2 \leq \left( \sum_{k=1}^n a_k^2 \right) \left( \sum_{k=1}^n b_k^2 \right)\)</p>
+<p>The Kalman Filter (KF) is an algorithm used to estimate the state of a given system based some measured data. While this notion of “state” is specific to the system we care about, the KF workflow can be agnostically employed across a variety of applications: computer vision, guidance and navigation, industrial process control, etc.</p>
 
-<h2 id="visuals">Visuals</h2>
-<p><img src="/assets/images/linear-kalman-filter/dummy2.png" alt="Diagram of Least Squares" /></p>
+<p>In this writeup, we will use it to accurately estimate the 2D position of a self-driving car in real-time, given noisy GPS sensor measurements.</p>
 
-<h2 id="code-example">Code Example</h2>
-<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// testing code snippet</span>
-<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
-</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<p>Note: The Kalman Filter follows much of the same approach of the <a href="/concepts/recursive-least-squares">Recursive LSE workflow</a>. For more intuition, follow along with that writeup first.</p>
 
-<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"hello, world"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
+<h3 id="workflow">Workflow</h3>
+
+<p>The whole point of the Kalman Filter is to measure the state of the system in a “fuzzy” fashion. The term “fuzzy” is used here to mean that the state is represented in a probablistic fashion: it has a <em>mean</em> and some <em>uncertainty</em>. By representing the state this way, we can account for inherent inaccuracies in any models we use to represent the system as well as the stochastic nature of noisy sensors.</p>
+
+<p>This improved estimate of state can thereafter be used downstream as the feedback component of a high-level control loop. For example, the autopilot of an airplane might want to maintain some atitude, altitude and heading velocity. The output of a Kalman Filter in this application would be an improved estimate of the current attitude, altitude and heading velocity, based on a set of noisy/inaccurate proprioceptive and exteroceptive sensors.</p>
+
+<p>The inputs and outputs of the KF for our specific self-driving car example are discussed in greater depth in following sections.</p>
+
+<p>The Kalman Filter is a recursive algorithm that can be represented as a loop:</p>
+
+<p><img src="/assets/images/recursive-least-squares/recursive_lse_cycle.png" alt="Range of Uncertainty" /></p>
+
+<p>where:</p>
+<ul>
+  <li>\(\hat{X}_{k-1}\): the estimated state at the end of the previous timestep</li>
+  <li>\(y_k\): incoming sensor measurement for the current timestep</li>
+  <li>\(\hat{X}_k\):  newly estimated state at the end of the current timestep</li>
+</ul>
+
+<p>Thus, the loop displayed on the right represents one such timestep in an endless infinite loop of timesteps.</p>
+
+<p>Let’s now explore the workflow and its components a bit further:</p>
+
+<p><img src="/assets/images/linear-kalman-filter/kf_workflow.png" alt="KF Workflow" /></p>
+
+<p>First, lets establish the nomenclature used in this diagram and all subsequent sections:</p>
+
+<ol>
+  <li>Variables:
+    <ul>
+      <li>\(X\) represents the mean component of the state</li>
+      <li>\(P\) represents the uncertainty component of the state</li>
+      <li>\(z\) represents the mean component of the sensor measurement</li>
+      <li>\(R\) represents the uncertainty component of the sensor measurement (sensor noise)</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">estimated</code> vs <code class="language-plaintext highlighter-rouge">true</code> state notation:
+    <ul>
+      <li>the <em>hat</em> notation is used to represent <em>estimated</em> state: \(\hat{X}\)</li>
+      <li>\(X\) alone represents the true state (which we cannot perfectly measure)</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">a-priori</code> state estimate:
+    <ul>
+      <li><em>“using principles to decide the probable effects or result of something.”</em></li>
+      <li><strong>“predicted”</strong> state estimate <em>before</em> a new measurement</li>
+      <li>denoted with a superscript <code class="language-plaintext highlighter-rouge">-</code> such as \(\hat{X}^{-}\)</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">a-posteriori</code> state estimate:
+    <ul>
+      <li><em>“knowledge which proceeds from observations to deduce probable causes.”</em></li>
+      <li><strong>“updated”</strong> or <strong>“corrected”</strong> state estimate <em>after</em> a new measurement</li>
+      <li>denoted with a superscript <code class="language-plaintext highlighter-rouge">+</code> such as \(\hat{X}^{+}\)</li>
+    </ul>
+  </li>
+  <li>Timestep notation:
+    <ul>
+      <li>a subscript \(_k\) is used to denote the timestep</li>
+      <li>\(X_k\) is the state in the current timestep</li>
+      <li>\(X_{k-1}\) is the state in the previous timestep</li>
+    </ul>
+  </li>
+</ol>
+
+<p>Thus, if we consider the KF workflow diagram (for an arbitrary timestep \(k\)) more closely, we are performing the following steps:</p>
+
+<ol>
+  <li>
+    <p>Start with the <code class="language-plaintext highlighter-rouge">a-posteriori</code> estimated state \(\hat{X}^{+}_{k-1}\) and uncertainty \(P^{+}_{k-1}\) from the previous timestep \(k-1\).</p>
+  </li>
+  <li>
+    <p><strong>Prediction Step:</strong> Feed this into a model (a kinematics-based motion model in our example) that represents the expected dynamics of the system to generate the new <code class="language-plaintext highlighter-rouge">a-priori</code> (predicted) state \(\hat{X}^{-}_{k}\) and uncertainty \(P^{-}_{k}\) for the current timestep \(k\).</p>
+  </li>
+  <li>
+    <p>Ingest a new measurement \(z_k\) (sensor reading) of the current state. Note that this measurement is noisy and therefore has an uncertainty \(R_k\) associated with it.</p>
+  </li>
+  <li>
+    <p><strong>Correction Step:</strong> The measurement model takes in the current measurement \(z_k\) and uncertainty \(R_k\) along with the <code class="language-plaintext highlighter-rouge">a-priori</code> state \(\hat{X}^{-}_{k}\) and uncertainty \(P^{-}_{k}\) and outputs the <code class="language-plaintext highlighter-rouge">a-posteriori</code> state estimate \(\hat{X}^{+}_{k}\) and uncertainty \(P^{+}_{k}\).</p>
+  </li>
+  <li>
+    <p>These <code class="language-plaintext highlighter-rouge">a-posteriori</code> components then become the new inputs to the KF for the next timestep cycle.</p>
+  </li>
+</ol>
+
+<p>Note: for the purposes of the Linear Kalman Filter, the motion and measurement models must both be linear models. We will explore why this is important in subsequent sections.</p>
+
+<h3 id="step-1">Step 1</h3>
+
 
 </div>
 

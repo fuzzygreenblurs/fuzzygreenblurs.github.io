@@ -5,6 +5,14 @@ title: Projects
 
 <br>
 
+## Quadrotor Flight Controller 
+
+### [Attitude Estimation](/projects/quadrotor/attitude-estimation)
+
+Optional: A rotation stage test jig is used as a platform to evaluate the performance of various filters in real-time attitude measurement of a given workspace using a gyroscope-accelerometer sensor module.
+
+The optimal filter identified by this test will be employed on the quadrotor controller thereafter. 
+
 ## A Simple MQTT Client/Server Scaffold
 
 [This is a basic implementation](https://gist.github.com/fuzzygreenblurs/9e0606c7d4a300488b47a11673f59f96) of a Mosquitto based MQTT pipeline. MQTT is a lightweight M2M protocol designed with IoT applications in mind. For example, if we want to read the state of an assembly line and trigger changes to the system, we might use an MQTT based pipeline to do this.

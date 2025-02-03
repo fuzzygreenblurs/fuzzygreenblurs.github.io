@@ -23,6 +23,7 @@ The inputs and outputs of the KF for our specific self-driving car example are d
 The Kalman Filter is a recursive algorithm that can be represented as a loop:
 
 ![Range of Uncertainty](/assets/images/recursive-least-squares/recursive_lse_cycle.png)
+![Range of Uncertainty](/assets/images/recursive-least-squares/recursive_lse_cycle.png)
 
 where: 
 - $$\hat{X}_{k-1}$$: the estimated state at the end of the previous timestep
@@ -78,8 +79,30 @@ Thus, if we consider the KF workflow diagram (for an arbitrary timestep $$k$$) m
 
 Note: for the purposes of the Linear Kalman Filter, the motion and measurement models must both be linear models. We will explore why this is important in subsequent sections.
 
-### Step 1 
+### Desired State & Motion Model 
 
+Now that we have discussed the high level workflow of the Kalman Filter, let us consider application-specific details related to tracking the position of our self-driving car. 
+
+First, let's begin with the set of assumptions we make about this problem:
+1. The vehicle is constrained to traverse 2D space only, represented here by the XY plane.
+2. The vehicle generally moves at a constant speed longitudinally.
+3. The vehicle could turn randomly: this is not a controlled action but needs to be accomodated in our estimation of the state. 
+
+Next, let's consider what our desired state should be. For this application, we are only really interested in tracking the real-time position and velocity of our self-driving car with respect the inertial frame. 
+
+Aside:
+
+Recall the inertial/global frame can be defined as a frame whose origin is fixed at a specific point on the 2D plane. 
+
+In contrast, there is also the relative/body frame whose origin is set to the centroid of the car (and therefore moves as the car moves). In addition, the orientation of its axes is relative to the longitudinal heading of the vehicle. For the purposes of our current problem, all our state variables will be measured with respect to an inertial frame. 
+
+Thus, our state can be represented as a vector $$\bold{X} = [p_x p_y v_x v_y]^T$$, where each component is with respect to the global frame.
+
+In the below diagram, $$v$$ is the vector along the longitudinal axis of the vehicle, representing its longitudinal velocity based with respect to the vehicle's relative frame. For our purposes, this vector can be decomposed into component $$v_x$$ and $$v_y$$ vectors, along the direction of the world frame's basis axes.
+
+![Range of Uncertainty](/assets/images/linear-kalman-filter/motion_model.png)
+
+To consider how the position and velocity of the vehicle evolve with time, we can apply these point-mass kinematics equations (assuming a constant acceleration component):
 
 
 

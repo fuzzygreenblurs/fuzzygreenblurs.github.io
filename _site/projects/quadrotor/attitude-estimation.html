@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Attitude Estimation &middot; Akhil Sankar
+    
+  </title>
+
+  
+  <link rel="canonical" href="http://localhost:4000/projects/quadrotor/attitude-estimation">
+  
+
+  <link rel="stylesheet" href="http://localhost:4000/public/css/poole.css">
+  <link rel="stylesheet" href="http://localhost:4000/public/css/syntax.css">
+  <link rel="stylesheet" href="http://localhost:4000/public/css/lanyon.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://localhost:4000/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="http://localhost:4000/public/favicon.ico">
+
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="http://localhost:4000/atom.xml">
+
+  
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-XXXX-Y', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <script type="text/javascript" async
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js">
+  </script>
+  
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <p>A reserved <a href="https://jekyllrb.com" target="_blank">Jekyll</a> theme that places the utmost gravity on content with a hidden drawer. Made by <a href="https://twitter.com/mdo" target="_blank">@mdo</a>.</p>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="http://localhost:4000/">About Me</a>
+    <a class="sidebar-nav-item" href="/projects">Projects</a>
+    <a class="sidebar-nav-item" href="/concepts">Concepts</a>
+
+    <!-- <a class="sidebar-nav-item" href="/archive/v1.1.0.zip">Download</a> -->
+    <span class="sidebar-nav-item">Currently v1.1.0</span>
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2025. All rights reserved.
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">Akhil Sankar</a>
+            <small></small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="page">
+  <h1 class="page-title">Attitude Estimation</h1>
+  <h3 id="high-level-concepts">High Level Concepts</h3>
+
+<p>Our quadrotor flight controller requires a real-time notion of the attitude (3D orientation) of the drone, specifically: pitch, roll and yaw with respect to the inertial frame. We might use an IMU sensor package (accelerometer, gyroscope, magnetometer) to provide this data. However most sensor data is noisy and uncertain or might not even be easily or directly measured.</p>
+
+<p>The point of a state-estimator block then, is to ingest uncertain, noisy sensor data and output the desired attitude signals in real-time, ultimately converging to a high degree notion of the state (in this case attitude).</p>
+
+<p>For now, we will discuss how to estimate <code class="language-plaintext highlighter-rouge">roll</code> and <code class="language-plaintext highlighter-rouge">pitch</code>, since these can be tracked using purely a gyroscope and accelerometer (packaged in the MPU6050 IMU module).</p>
+
+<p>Let’s briefly discuss Euler angles vs. measured angular velocities:</p>
+
+<p>Euler Angles: these are the desired output angles (pitch: \(\theta\), roll: \(\phi\), and yaw: \(\psi\)) that estimate attitude of the drone. They are measured with respect to the inertial frame.</p>
+
+<p>The IMU outputs angular velocities with respect to the <em>body</em> frame (these velocities are called \(p\), \(r\), and \(y\)) in this diagram. Since these are with respect to the body frame, they cannot be considered to be the same as \(\dot{\theta}\), \(\dot{\phi}\) and \(\dot{\psi}\) (these angular rates are with respect to the fixed, inertial frame).</p>
+
+<p><img src="/assets/images/flight-controller/attitude-estimator/pitch_roll_yaw.jpg" alt="Range of Uncertainty" /></p>
+
+<h3 id="acclerometer-model">Acclerometer Model</h3>
+
+<p>Firstly, let us assume the following coordinate system for the measured accelerometer values. The measured accelerations along the given basis axes of this coordinate system: \(\bar{x}\), \(\bar{y}\) and \(\bar{z}\).</p>
+
+<p><img src="/assets/images/flight-controller/attitude-estimator/accelerometer_frame.png" alt="Range of Uncertainty" /></p>
+
+<p>Next, it should be noted that the measured accelerations along these axes are the sum of several components:</p>
+
+<ul>
+  <li>the “true” linear acceleration of the system, not accounting for rotation or gravity</li>
+  <li>a coriolis-like acceleration caused by a “twisting” action due to yawing while moving linearly</li>
+  <li>acceleration due to gravity, transformed by the orietation of the IMU</li>
+  <li>inherent bias that might be built into the accelerometer readings</li>
+  <li>zero-mean, unbiased gaussian white noise</li>
+</ul>
+
+<p><img src="/assets/images/flight-controller/attitude-estimator/accelerometer_nl_model.png" alt="Range of Uncertainty" /></p>
+
+<h4 id="how-can-we-derive-roll-and-pitch-from-these-readings">How can we derive roll and pitch from these readings?</h4>
+
+<p>To simplify this model for the purposes of attitude estimation, we will assume that the IMU is at rest.</p>
+
+<p>Therefore, we only consider the component of acceleration due to gravity. The force of gravity is then spread across the three basis vectors of the body frame, proportional to the orientation of the body, manifesting in acceleration readings.</p>
+
+<p>To build an intuition about this relationship, lets consider the effect of pitch and roll individually:</p>
+
+<p><img src="/assets/images/flight-controller/attitude-estimator/pitch_and_roll.png" alt="Range of Uncertainty" /></p>
+
+<p>Combining these actions together, we derive the following relationship:</p>
+
+<p><img src="/assets/images/flight-controller/attitude-estimator/simultaneous_pitch_roll.png" alt="Range of Uncertainty" /></p>
+
+<p>We can then solve for the estimated pitch (\(\hat{\theta}\)) and roll (\(\hat{\phi}\)) with respect to the inertial frame:</p>
+
+\[\frac{a_z}{a_y} = \frac{-g \cos\theta \sin\phi}{-g \cos\theta \cos\phi} = \tan(\phi) \Rightarrow \hat{\phi} = \tan^{-1} \left( \frac{a_z}{a_y} \right)\]
+
+\[\frac{a_x}{g} = \frac{g \sin\theta}{g} = \sin\theta \Rightarrow \hat{\theta} = \sin^{-1} \left( \frac{a_x}{g} \right) \\\]
+
+<p>Keep in mind that these estimates are only close to true when the IMU is at rest. While in motion, we need to consider the other acceleration terms, along with the added noise and bias.</p>
+
+<p>Practically, implementing this technique might look like:</p>
+
+<p><img src="/assets/images/flight-controller/attitude-estimator/simplified_practical_accel_model.png" alt="Range of Uncertainty" /></p>
+
+<h3 id="gyroscope-model">Gyroscope Model</h3>
+
+<p>Similarly, lets first consider the body coordinate frame of the gyroscope and how it measured angular velocities:</p>
+
+<p><img src="/assets/images/flight-controller/attitude-estimator/gyroscope_frame.png" alt="Range of Uncertainty" /></p>
+
+<p>The gyroscope model is relatively simple, with only three components:</p>
+
+<ul>
+  <li>the true angular velocity (in each axis)</li>
+  <li>a time-varying bias that can long term drift in the downstream integration process</li>
+  <li>zero-mean, unbiased gaussian white noise</li>
+</ul>
+
+<p>such that:</p>
+
+\[\omega{_b} = \omega{_{true}} + \beta{(t)} + \eta{(t)}\]
+
+<p>In order to convert these body-frame angular rates into pitch and roll in the inertial frame, we can refer to this relationship:</p>
+
+<p><img src="/assets/images/flight-controller/attitude-estimator/estimated_pitch_roll_from_gyro.png" alt="Range of Uncertainty" /></p>
+
+<p>Two points of note:</p>
+
+<ul>
+  <li>The output (left-side) shows the pitch and roll angular rates. We will need to apply Euler integration to calculate the actual angles</li>
+  <li>This relationship calls for a prior knowledge of \(\theta\) and \(\phi\). Since we don’t know these values, we will need to provide estimated values of these angles from the previous timestep. Any drift or long term error will quickly build up in the subsequent integration step!</li>
+</ul>
+
+<p><img src="/assets/images/flight-controller/attitude-estimator/gyro_euler_integration.png" alt="Range of Uncertainty" /></p>
+
+<h3 id="offsetting-the-long-term-drift-error">Offsetting the Long Term Drift Error</h3>
+
+<p>Considering the accuracy of these two modalities:</p>
+
+<ul>
+  <li>Accelerometers give better estimates when they are rest. They tend to generate a lot of <em>white</em> noise when moving.</li>
+  <li>Gyroscopes give good readings statically or in-motion <em>for short periods of time</em>. They are prone to drift due to an inherent bias.</li>
+</ul>
+
+<p>When we integrate this inherent bias, we generate a long-term drift error that renders the gyroscope readings too inaccurate to be useful.</p>
+
+<p>If we could find a way to offset this long-term drift error, we could primarily rely on the gyroscope data for real-time attitude estimation.</p>
+
+<p>Solution: since the accelerometer is not particularly accurate in motion but registers <em>white noise</em> (its average reading will be within some reasonable standard deviation of the true value of the attitude), it can limit or “correct” the accumulate drift error per timestep.</p>
+
+<h3 id="complementary-filters">Complementary Filters</h3>
+
+<p>In fact, this is exactly what a complementary filter is. In essence, for each timestemp, our notion of the state is primarily comprised of the gyroscope reading (and integration) with a small component of our notion being influenced by the accelerometer data to negate any build up of long-term drift.</p>
+
+<p><img src="/assets/images/flight-controller/attitude-estimator/complementary_filter.png" alt="Range of Uncertainty" /></p>
+
+<p>This notion of “small vs primary” components is given by the term \(\alpha\) which signifies “how much confidence we have in our accelerometer readings”. It is usually a very small value, meaning that we trust our short-term gyroscope readings much more.</p>
+
+<p><img src="/assets/images/flight-controller/attitude-estimator/complementary_filter_eq.png" alt="Range of Uncertainty" /></p>
+
+<h3 id="extended-kalman-filter">Extended Kalman Filter</h3>
+
+<p>The complementary filter can alternatively be thought of state observer for an LTI state-space model.</p>
+
+<p>Firstly, we can think of the new state \(X_{n+1}\) (attitude) as a function of the current state \(X_n\) and an input \(u\) (in this case, the input would be in the angular velocities read by the gyro):</p>
+
+\[X_{n+1} = AX_n + Bu_n\]
+
+<p>Expanding this out, we have:</p>
+
+\[\begin{bmatrix}
+\hat{\phi}_{n+1} \\
+\hat{\theta}_{n+1}
+\end{bmatrix}
+=
+\begin{bmatrix}
+1 &amp; 0 \\
+0 &amp; 1
+\end{bmatrix}
+\begin{bmatrix}
+\hat{\phi}_{n} \\
+\hat{\theta}_{n}
+\end{bmatrix}
++
+\begin{bmatrix}
+\tau &amp; 0 \\
+0 &amp; \tau
+\end{bmatrix}
+\begin{bmatrix}
+\dot{\phi} \\
+\dot{\theta}
+\end{bmatrix}\]
+
+<p>We want to subsequently update the gyro-based attitude data by adding the acclerometer correction to handle the long-term drift. This takes on the form of a correction step generated by an “observer”. This allows us to fit the more traditional dynamical systems model by employing a Lunberger observer term to represent the accelerometer correction:</p>
+
+\[X_{n+1} = AX_n + Bu_n + L(X_n - \hat{X_n})\]
+
+<p>where \(X_n\) represents the posterior attitude estimate (of the previous timestamp). Thus, \(Bu_n\) represents influence of the gyro angular velocity readings. On the other hand, \((X_n - \hat{X_n})\) represents the error or “innovation” between the posterior attitude estimate and the current attitude estimate purely from the accelerometer data. Thus the correction step is scaled by the magnitude of the error between the posterior attitude estimate and the current accelerometer estimate.</p>
+
+<p>In the complementary filter, this \(L\) value is a constant, represented as:</p>
+
+\[\begin{bmatrix}
+\alpha &amp; 0 \\
+0 &amp; \alpha
+\end{bmatrix}\]
+
+<p>where \(\alpha\) encodes “how much confidence we have in our accelerometer readings”.</p>
+
+<p>In the Kalman filter, lets call this \(K\). It is now called the Kalman Gain and is dynamically evaluated at each timestep. Our equation changes slightly such that the first term is now considered the “prior” (gyro-model estimation) estimate.</p>
+
+<p>The second term is a function of the error between the “true” (accelerometer measurement) state verses the prior estimate, called the <em>innovation</em> term. If these two terms are very different, the correction term should be much larger, causing the posterior (output) estimate to be dramatically different (and corrected).</p>
+
+<p>Given the stochasticity of the two measurement models, our estimate of the state can be represented in a stochastic fashion as well, with a mean and covariance. In this case, the mean is calculated using our LTI + Lunberger equation. The covariance \(P\) can be calculated as the square of the innovation, per the standard definition of the covariance matrix.</p>
+
+<p><img src="/assets/images/flight-controller/attitude-estimator/kalman_filter_dynamic_scaling_factor.png" alt="Range of Uncertainty" /></p>
+
+<p>By correcting the prior estimate based on the magnitude of the innovation, the covariance can be expected to be reduced, since it is directly the square of the innovation.</p>
+
+<h3 id="non-linear-system">Non-Linear System</h3>
+
+<p>We should now note that our system is non-linear, due to all the trigonometric components in our state-space equations. Thus, we can write our state-space system more generally as:</p>
+
+\[\dot{x} = f(x, u) + \xi\]
+\[ y = h(x, u) + \eta\]
+
+<p>Expanding out the prediction (also called <em>prior</em> and denoted with a superscript \(^-\)) and correction (also called <em>posterior</em> and denoted with a superscript \(^+\)) steps for the estimated mean of the state, we have:</p>
+
+\[\hat{x}_{n+1}^- = \hat{x}_n^+ + T f(\hat{x}_n^+, u)\]
+
+\[\hat{x}_{n+1}^+ = \hat{x}_{n+1}^- + K \left(y - h(\hat{x}_{n+1}^-, u) \right)\]
+
+<p>It should be noted that the covariance \(P\) should increase with the prediction step (due to inherent error in the gyroscope reading-integration process), and subsequently decrease once the accelerometer correction is introduced.</p>
+
+<h3 id="prediction-step">Prediction Step:</h3>
+
+<p><img src="/assets/images/flight-controller/attitude-estimator/practical_ekf_1.png" alt="Range of Uncertainty" />
+<img src="/assets/images/flight-controller/attitude-estimator/practical_ekf_2.png" alt="Range of Uncertainty" /></p>
+
+<p>The output attitude rates can then be integrated over the constant timestep T using Euler integration.
+The final output then is the estimated pitch and roll angle, encoded in \(\hat{X}_{n+1}^-\), also called the <em>estimated prior state</em>.</p>
+
+<p>We also need to update the covariance matrix:</p>
+
+\[P_{n+1}^- = (\nabla{F})P_{n}^{+}(\nabla{F}^T) + JQJ^T\]
+
+<h3 id="quick-review-of-our-state-space-system">Quick Review of Our State-Space System</h3>
+
+<p>The general state-space representation of the update step is: \(x_{k+1} = x_k + \Delta t \cdot f(x_k, u_k)\)</p>
+
+<p>where \(f(x_k, u_k)\) represents the mapping of the gyro input (\(u_k\)) from \(p_k\), \(q_k\), \(r_k\) body-frame angular velocities to inertial-frame pitch and roll angular velocities:</p>
+
+\[f(x_k, u_k) =
+\begin{bmatrix}
+p_k + q_k \sin(\hat{\phi}) \tan(\hat{\theta}) + r_k \cos(\hat{\phi}) \tan(\hat{\theta}) \\
+q_k \cos(\hat{\phi}) - r_k \sin(\hat{\phi})
+\end{bmatrix}\]
+
+<p>Thus, our state-space equations can individually be expanded. The estimated prior roll would be:
+\(\quad \Rightarrow \boxed{\hat{\phi}_{n+1}^{-} = \hat{\phi}_{n}^{+} + \Delta t \cdot \left( p_n + q_n \sin(\hat{\phi_{n}^{+}})\tan(\hat{\theta_{n}^{+}}) + r_n \cos(\hat{\phi_{n}^{+}})\tan(\hat{\theta_{n}^{+}}) \right)}\)</p>
+
+<p>and the estimated prior pitch would be:</p>
+
+<p>$$
+\quad \Rightarrow \boxed{\hat{\theta}<em>{n+1}^{-} = \hat{\theta}_n + \Delta t \cdot \left( q_n \cos(\hat{\phi</em>{n}^{+}}) - r_n \sin(\hat{\phi_{n}^{+}}) \right)}
+$</p>
+
+<p>where \(\nabla{F}\) represents the Jacobian of \(f(x_k, u_k)\), (the mapping of the gyro input to Euler rates). This Jacobian is applied to linearize the non-linear dynamics of the mapping (state transition function). Here, the \(Q\) matrix encodes the process noise covariance (uncertainty in the gyroscope readings).</p>
+
+<p>Since the noise component is assumed to be additive (represented in same state-space by definition so it can be directly added in), \(J\) can be considered to be the \(I\) matrix.</p>
+
+<p>In general, the component \(\nabla{F}P_{n}^{+}\nabla{F}^T\) represents how the uncertainty is re-distributed across the state variables (i.e. no new uncertainty is introduced). The second term \(JQJ^T\) represents the new uncertainty introduced to the system, from the gyroscope measurement uncertainty (in this case).</p>
+
+\[\nabla{F} =
+\begin{bmatrix}
+\frac{\partial \dot{\phi}}{\partial \phi} &amp; \frac{\partial \dot{\phi}}{\partial \theta} \\
+\frac{\partial \dot{\theta}}{\partial \phi} &amp; \frac{\partial \dot{\theta}}{\partial \theta}
+\end{bmatrix}\]
+
+<p>Expanding this out, our estimated prior covariance looks like:</p>
+
+\[\quad \Rightarrow \boxed{P_{n+1}^- = (\nabla{F_n})P_{n}^{+}(\nabla{F_n}^T) + Q}\]
+
+<p>where:</p>
+
+\[P_n^+ =
+\begin{bmatrix}
+\sigma_{\phi}^2 &amp; \text{Cov}(\phi, \theta) \\
+\text{Cov}(\theta, \phi) &amp; \sigma_{\theta}^2
+\end{bmatrix}\]
+
+\[\nabla{F_n} =
+\begin{bmatrix}
+0 &amp; \sec^2(\theta) (p_n \cos\phi + r_n \sin\phi) \\
+-q_n \cos\phi - r_n \sin\phi &amp; 0
+\end{bmatrix}\]
+
+\[Q_k =
+\begin{bmatrix}
+\sigma_p^2 &amp; 0 \\
+0 &amp; \sigma_q^2
+\end{bmatrix}\]
+
+<h3 id="updatecorrection-step">Update/Correction Step:</h3>
+
+<p>Next, the accelerometer reading \((a_x, a_y, a_z)\) at the current timestep can be used to correct the predicted estimate of the current state.</p>
+
+<p>Thus, the updated state estimate (called the posterior estimate) after correction is:</p>
+
+\[\boxed{\hat{X}_n^+ = \hat{X}_n^- + K(y - h(\hat{X}_n^-, u))}\]
+
+<p>where \(y\) is the measurement, \(h(\hat{X}_n^-, u)\) is the predicted accelerometer measurement and \(K\) is the Kalman gain scaling the effect of the correction step.</p>
+
+<p>The updated convariance is:</p>
+
+\[P^+ = (I - KC)P^-\]
+
+<p>If we expand out the accerometer sensor model \(h(\hat{X}_n^-, u))\), assuming at-rest constraint, we have:</p>
+
+\[h(\hat{X}_k^-, u) = 
+\begin{bmatrix}
+\hat{a}_{x, k} \\
+\hat{a}_{y, k} \\
+\hat{a}_{z, k}
+\end{bmatrix}
+=
+g
+\begin{bmatrix}
+\sin(\hat{\theta}_k^-) \\
+-\cos(\hat{\theta}_k^-) \sin(\hat{\phi}_k^-) \\
+-\cos(\hat{\theta}_k^-) \cos(\hat{\phi}_k^-)
+\end{bmatrix}
++ 
+\begin{bmatrix}
+\eta_{x,k} \\
+\eta_{y,k} \\
+\eta_{z,k}
+\end{bmatrix}\]
+
+<p>The output (left-hand side) is an <em>estimate</em> of the accelerometer measurement (acceleration in each axis) for the current timestep. This estimate is calculated using the <em>prior</em> estimate of the pitch and roll angles.</p>
+
+<p>Next, due to the at-rest model assumption, the only acceleration to consider is gravity and how it is distributed across the three basis vectors.</p>
+
+<p>Finally, an additive noise component \(\eta\) is appended to the equation, to account of the stochastic element of the measurement.</p>
+
+<h5 id="why-does-our-correction-step-look-like-this">Why does our correction step look like this?</h5>
+
+<p>The correction step is essentially doing this:</p>
+
+<ol>
+  <li>Determine the “innovation” (error) between the “true state” (given by the actual accelerometer measurement) and predicted accelerometer measurement.</li>
+  <li>The innovation tells us how far our estimated state (using the predicted accelerometer measurement) is from the actual reading.</li>
+  <li>Based on the innovation magnitude, a corrective action updates the estimated state to more closely match the true state.</li>
+  <li>The Kalman Gain encodes how much the measurement should be trusted over the predicted state.</li>
+</ol>
+
+<h5 id="update-step-continued">Update Step (continued):</h5>
+<p>Next, given that the estimated state has an uncertainty, and the sensor measurement is also noisy and therefore has uncertainty, the innovation must also have some uncertainty. We will call this uncertainty \(S_k\) where:</p>
+
+\[S_k = \nabla{h_k}P_k^-\nabla{h_k}^T + R_k\]
+
+<p>where \(\nabla{h_k}\) represents the gradient of the sensor model (used to linearize the non-linear sensor model), and \(R_k\) represents the covariance of the noise component of the measurement (considered additive noise in this case).</p>
+
+<p>Thus, to calculate the Kalman Gain, we can apply the following relationship:</p>
+
+\[\boxed{K_k = P_k^-\nabla{h_x}^TS_k^{-1}}\]
+
+<p>Lastly, the covariance of the posteriori estimate, \(P_k^+\) :</p>
+
+\[\boxed{P_k^+ = (I - K_k\nabla{h_x}_k) P_k^-}\]
+
+</div>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script src='/public/js/script.js'></script>
+  </body>
+</html>

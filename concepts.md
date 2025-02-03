@@ -13,9 +13,10 @@ permalink: /concepts/
 - [Recursive Least Squares Estimation](/concepts/recursive-least-squares/)
 
 ### State Estimation
-- [Linear Kalman Filter](/concepts/linear-kalman-filter/)
-- [Extended Kalman Filter](/concepts/extended-kalman-filter/)
-- [Unscented Kalman Filter](/concepts/unscented-kalman-filter/)
+<!-- - [Linear Kalman Filter](/concepts/linear-kalman-filter/) -->
+<!-- - [Extended Kalman Filter](/concepts/extended-kalman-filter/) -->
+<!-- - [Unscented Kalman Filter](/concepts/unscented-kalman-filter/) -->
+[Attitude Estimation: Complementary Filter, Extended Kalman Filter (EKF)](/projects/quadrotor/attitude-estimation)
 
 <!-- ### Embedded Systems -->
 <!-- - all the interview questions -->

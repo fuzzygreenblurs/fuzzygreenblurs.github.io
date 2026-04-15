@@ -1,11 +1,8 @@
 <!DOCTYPE html>
-<html lang="en-us">
-
+<html lang="en" data-theme="dark-poole">
   <head>
-  <link href="http://gmpg.org/xfn/11" rel="profile">
-  <meta http-equiv="content-type" content="text/html; charset=utf-8">
-
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>
     
@@ -13,128 +10,87 @@
     
   </title>
 
-  
-  <link rel="canonical" href="http://localhost:4000/projects/">
-  
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/assets/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/assets/favicon.ico">
+  <link rel="alternate" type="application/atom+xml" title="Akhil Sankar" href="/atom.xml">
 
-  <link rel="stylesheet" href="http://localhost:4000/public/css/poole.css">
-  <link rel="stylesheet" href="http://localhost:4000/public/css/syntax.css">
-  <link rel="stylesheet" href="http://localhost:4000/public/css/lanyon.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="Projects" />
+<meta name="author" content="Akhil Sankar" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Personal site of Akhil Sankar." />
+<meta property="og:description" content="Personal site of Akhil Sankar." />
+<link rel="canonical" href="http://localhost:4000/projects/" />
+<meta property="og:url" content="http://localhost:4000/projects/" />
+<meta property="og:site_name" content="Akhil Sankar" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Projects" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","author":{"@type":"Person","name":"Akhil Sankar","url":"https://github.com/fuzzygreenblurs"},"description":"Personal site of Akhil Sankar.","headline":"Projects","url":"http://localhost:4000/projects/"}</script>
+<!-- End Jekyll SEO tag -->
 
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://localhost:4000/public/apple-touch-icon-precomposed.png">
-  <link rel="shortcut icon" href="http://localhost:4000/public/favicon.ico">
-
-  <link rel="alternate" type="application/rss+xml" title="RSS" href="http://localhost:4000/atom.xml">
-
-  
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-    ga('create', 'UA-XXXX-Y', 'auto');
-    ga('send', 'pageview');
-  </script>
-  <script type="text/javascript" async
-    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js">
-  </script>
-  
 </head>
 
 
   <body>
+    <div class="container content">
+      <header class="masthead">
+        <h3 class="masthead-title">
+          <a href="/" title="Home">Akhil Sankar</a>
 
-    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
-     styles, `#sidebar-checkbox` for behavior. -->
-<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+          <nav class="nav">
+            
+            <small><a href="/projects">Projects</a></small>
+            
+          </nav>
+        </h3>
+      </header>
 
-<!-- Toggleable sidebar -->
-<div class="sidebar" id="sidebar">
-  <div class="sidebar-item">
-    <p>A reserved <a href="https://jekyllrb.com" target="_blank">Jekyll</a> theme that places the utmost gravity on content with a hidden drawer. Made by <a href="https://twitter.com/mdo" target="_blank">@mdo</a>.</p>
-  </div>
-
-  <nav class="sidebar-nav">
-    <a class="sidebar-nav-item" href="http://localhost:4000/">About Me</a>
-    <a class="sidebar-nav-item" href="/projects">Projects</a>
-    <a class="sidebar-nav-item" href="/concepts">Concepts</a>
-
-    <!-- <a class="sidebar-nav-item" href="/archive/v1.1.0.zip">Download</a> -->
-    <span class="sidebar-nav-item">Currently v1.1.0</span>
-  </nav>
-
-  <div class="sidebar-item">
-    <p>
-      &copy; 2025. All rights reserved.
-    </p>
-  </div>
-</div>
-
-
-    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
-         content to avoid any CSS collisions with our real content. -->
-    <div class="wrap">
-      <div class="masthead">
-        <div class="container">
-          <h3 class="masthead-title">
-            <a href="/" title="Home">Akhil Sankar</a>
-            <small></small>
-          </h3>
-        </div>
-      </div>
-
-      <div class="container content">
-        <div class="page">
+      <main>
+        <article class="page">
   <h1 class="page-title">Projects</h1>
-  <p><br /></p>
+  <h3 id="vertical-farm-orchestrator-python"><a href="https://github.com/fuzzygreenblurs/vfarm">Vertical Farm Orchestrator (Python)</a></h3>
+<p>A scalable on-prem service-oriented architecture for vertical farm automation that ingests sensor data via MQTT, processes it via stream-based analytics, and coordinates actuator control using distributed locking for thread-safe resource management. It includes simulation, alerting, and comprehensive testing, with built-in support for horizontal scaling and a migration path to Kafka for larger deployments.
+<br /><br /></p>
 
-<h2 id="quadrotor-flight-controller">Quadrotor Flight Controller</h2>
+<h3 id="thread-safe-os-virtual-memory-simulator-c"><a href="https://github.com/fuzzygreenblurs/threadsafe_vmem/tree/main">Thread-Safe OS Virtual Memory Simulator (C)</a></h3>
+<p>A thread-safe virtual memory management library that implements a two-level page table and TLB cache to translate virtual addresses into physical addresses efficiently. It is validated through single and multithreaded matrix multiplication benchmarks to ensure correctness and measure translation performance.
+<br /><br /></p>
+<h3 id="fpga-general-purpose-processor-vhdl"><a href="https://github.com/fuzzygreenblurs/fpga_asip">FPGA: General Purpose Processor (VHDL)</a></h3>
+<p>An FPGA-based processor with application-specific instructions for VGA video and UART communication designed around a fully detailed custom ISA and integrated from ground-up IP blocks in Vivado. Verified via a full-system simulator running assembly programs produced by a custom assembler.
+<br /><br /></p>
+<h3 id="magtile-python"><a href="https://ieeexplore.ieee.org/document/11400697">MagTile (Python)</a></h3>
+<p>A modular electromagnetic planar motor for fine position control of small ferromagnetic payloads, designed to mimic the swimming action of zebrafish. The platform is built from physically chained custom PCBs driven by PCA9685 PWM controllers over I²C. Applied force is profiled using visual feedback and its non-linear dynamics characterized through system identification. Multi-agent trajectory control with collision avoidance via vision-based custom Dijkstra and steering-angle strategies.</p>
 
-<h3 id="attitude-estimation"><a href="/projects/quadrotor/attitude-estimation">Attitude Estimation</a></h3>
+<p><em>Published: IEEE Transactions for Control Systems Technology, Feb 2026.</em>
+<br /><br /></p>
+<h3 id="6-dof-attitude-estimator-c"><a href="https://github.com/fuzzygreenblurs/ahrs">6-DOF Attitude Estimator (C++)</a></h3>
+<p>A <a href="https://github.com/fuzzygreenblurs/ahrs/blob/main/6dof_attitude_estimation.pdf">first-principles</a> bare-metal AHRS on an STM32F446RE that fuses MPU9250 gyro and accelerometer data over I²C (using CMSIS-CORE) to estimate quaternion-based pitch and roll, benchmarking a Madgwick filter against an Extended Kalman Filter (EKF). Visualized using Three.js. 
+<br /><br /></p>
+<h3 id="a-simple-mqtt-clientserver-scaffold-python"><a href="https://gist.github.com/fuzzygreenblurs/9e0606c7d4a300488b47a11673f59f96">A Simple MQTT Client/Server Scaffold (Python)</a></h3>
 
-<p>Optional: A rotation stage test jig is used as a platform to evaluate the performance of various filters in real-time attitude measurement of a given workspace using a gyroscope-accelerometer sensor module.</p>
-
-<p>The optimal filter identified by this test will be employed on the quadrotor controller thereafter.</p>
-
-<h2 id="a-simple-mqtt-clientserver-scaffold">A Simple MQTT Client/Server Scaffold</h2>
-
-<p style="text-align: justify"><a href="https://gist.github.com/fuzzygreenblurs/9e0606c7d4a300488b47a11673f59f96">This is a basic implementation</a> of a Mosquitto based MQTT pipeline. MQTT is a lightweight M2M protocol designed with IoT applications in mind. For example, if we want to read the state of an assembly line and trigger changes to the system, we might use an MQTT based pipeline to do this.</p>
+<p style="text-align: justify">A skeleton implementation of a secure Mosquitto based MQTT pipeline running on EC2. MQTT is a lightweight M2M protocol designed for IoT.</p>
 
 <p><br /></p>
 
-<h2 id="2d-physics-engine-pikuma-course">2D Physics Engine (Pikuma Course)</h2>
 
-<p style="text-align: justify"><em>Note: all demos in this section are built using vanilla C++17 and SDL2</em></p>
+</article>
 
-<p style="text-align: justify">Impulse Collision Resolution: <a href="https://youtu.be/uDtQh0QGs48">This demo</a> showcases collision detection and resolution using a penetration and impulse calculation of circular objects of different masses at a different coefficients of resitution. In the showcased demo, one object is maintained in a static position (<code class="language-plaintext highlighter-rouge">invMass = 0</code>) while new objects are dynamically spawned in the environment, showcasing multiple simultaneous collisions. You can find the code for this specific demo in this <a href="https://github.com/fuzzygreenblurs/2d_game_physics_engine/commit/ba62d30afc7afab7a5d92c4412c0ffd2a9d1d162">commit</a>.</p>
+      </main>
 
-<p><br /></p>
-
-<h2 id="cuny-emerging-scholars-program-esp--6-dof-scara-robotic-arm">CUNY Emerging Scholars Program (ESP):  6 DoF SCARA Robotic Arm</h2>
-
-<p style="text-align: justify">In 2022, as a part-time student at CUNY, I was awarded the ESP Scholarship to showcase a 6 degree-of-freedom SCARA robotic arm that could perform a simple pick-and-place action (self-studying the <a href="https://www.robogrok.com/Robotics_1.php">Angela Sodemann</a> Robotics 1 course and kit) and writing a <a href="https://github.com/fuzzygreenblurs/3dof_control/blob/main/scara_esp_paper.pdf">short paper</a> summarizing the approach. This project was performed as a practical demonstration of linear transformations in the physical domain. The manipulator was made up of a Raspberry Pi that actuated 2 revolute servo joints and a prismatic joint (a rack-and-pinion controlled by a motor-encoder assembly).</p>
-
-<p><br />
-Here is a summary of the perception and control <a href="https://github.com/fuzzygreenblurs/3dof_control">logic</a>:</p>
-<ol style="text-align: justify">
-  <li>A calibration measurement is performed to determine the pixel-to-cm mapping from image plane to world coordinates</li>
-  <li>A monocular camera is used to perform background subtraction to determine the location of the target in the image coordinates</li>
-  <li>A transformation is then used to convert these coordinates to 3D world coordinates</li>
-  <li>An inverse kinematics operation is then used to determine the requisite revolute joint angles</li>
-  <li>Finally, an RPi GPIO control signal is dispatched to the servos and motor-encoder to position the marker at the target</li>
-</ol>
-
-<p style="text-align: justify">I also put together a couple of <a href="https://www.youtube.com/playlist?list=PLoytQ1zm8QQB1rKg45-0EHJ8OXCNs55xg">demo videos</a> to showcase this approach during the process of building the system.</p>
-<p><br /></p>
-
-</div>
-
-      </div>
+      <footer class="footer">
+        <small>
+          &copy;
+          <time datetime="2026-04-15T10:54:39-04:00"
+            >2026</time
+          >. All rights reserved.
+        </small>
+      </footer>
     </div>
 
-    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
-
-    <script src='/public/js/script.js'></script>
+    
   </body>
 </html>

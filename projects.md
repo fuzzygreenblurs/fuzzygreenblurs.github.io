@@ -3,47 +3,28 @@ layout: page
 title: Projects
 ---
 
-<br>
+### [Vertical Farm Orchestrator (Python)](https://github.com/fuzzygreenblurs/vfarm)
+A scalable on-prem service-oriented architecture for vertical farm automation that ingests sensor data via MQTT, processes it via stream-based analytics, and coordinates actuator control using distributed locking for thread-safe resource management. It includes simulation, alerting, and comprehensive testing, with built-in support for horizontal scaling and a migration path to Kafka for larger deployments.
+<br><br>
 
-## Quadrotor Flight Controller 
+### [Thread-Safe OS Virtual Memory Simulator (C)](https://github.com/fuzzygreenblurs/threadsafe_vmem/tree/main)
+A thread-safe virtual memory management library that implements a two-level page table and TLB cache to translate virtual addresses into physical addresses efficiently. It is validated through single and multithreaded matrix multiplication benchmarks to ensure correctness and measure translation performance.
+<br><br>
+### [FPGA: General Purpose Processor (VHDL)](https://github.com/fuzzygreenblurs/fpga_asip)
+An FPGA-based processor with application-specific instructions for VGA video and UART communication designed around a fully detailed custom ISA and integrated from ground-up IP blocks in Vivado. Verified via a full-system simulator running assembly programs produced by a custom assembler.
+<br><br>
+### [MagTile (Python)](https://ieeexplore.ieee.org/document/11400697) 
+A modular electromagnetic planar motor for fine position control of small ferromagnetic payloads, designed to mimic the swimming action of zebrafish. The platform is built from physically chained custom PCBs driven by PCA9685 PWM controllers over I²C. Applied force is profiled using visual feedback and its non-linear dynamics characterized through system identification. Multi-agent trajectory control with collision avoidance via vision-based custom Dijkstra and steering-angle strategies.
 
-### [Attitude Estimation](/projects/quadrotor/attitude-estimation)
+_Published: IEEE Transactions for Control Systems Technology, Feb 2026._
+<br><br>
+### [6-DOF Attitude Estimator (C++)](https://github.com/fuzzygreenblurs/ahrs)
+A [first-principles](https://github.com/fuzzygreenblurs/ahrs/blob/main/6dof_attitude_estimation.pdf) bare-metal AHRS on an STM32F446RE that fuses MPU9250 gyro and accelerometer data over I²C (using CMSIS-CORE) to estimate quaternion-based pitch and roll, benchmarking a Madgwick filter against an Extended Kalman Filter (EKF). Visualized using Three.js. 
+<br><br>
+### [A Simple MQTT Client/Server Scaffold (Python)](https://gist.github.com/fuzzygreenblurs/9e0606c7d4a300488b47a11673f59f96) 
 
-Optional: A rotation stage test jig is used as a platform to evaluate the performance of various filters in real-time attitude measurement of a given workspace using a gyroscope-accelerometer sensor module.
-
-The optimal filter identified by this test will be employed on the quadrotor controller thereafter. 
-
-## A Simple MQTT Client/Server Scaffold
-
-[This is a basic implementation](https://gist.github.com/fuzzygreenblurs/9e0606c7d4a300488b47a11673f59f96) of a Mosquitto based MQTT pipeline. MQTT is a lightweight M2M protocol designed with IoT applications in mind. For example, if we want to read the state of an assembly line and trigger changes to the system, we might use an MQTT based pipeline to do this.
+A skeleton implementation of a secure Mosquitto based MQTT pipeline running on EC2. MQTT is a lightweight M2M protocol designed for IoT. 
 {: style="text-align: justify"}
 
 <br>
 
-## 2D Physics Engine (Pikuma Course)
-
-*Note: all demos in this section are built using vanilla C++17 and SDL2*
-{: style="text-align: justify"}
-
-Impulse Collision Resolution: [This demo](https://youtu.be/uDtQh0QGs48) showcases collision detection and resolution using a penetration and impulse calculation of circular objects of different masses at a different coefficients of resitution. In the showcased demo, one object is maintained in a static position (`invMass = 0`) while new objects are dynamically spawned in the environment, showcasing multiple simultaneous collisions. You can find the code for this specific demo in this [commit](https://github.com/fuzzygreenblurs/2d_game_physics_engine/commit/ba62d30afc7afab7a5d92c4412c0ffd2a9d1d162).
-{: style="text-align: justify"}
-
-<br>
-
-## CUNY Emerging Scholars Program (ESP):  6 DoF SCARA Robotic Arm
-
-In 2022, as a part-time student at CUNY, I was awarded the ESP Scholarship to showcase a 6 degree-of-freedom SCARA robotic arm that could perform a simple pick-and-place action (self-studying the [Angela Sodemann](https://www.robogrok.com/Robotics_1.php) Robotics 1 course and kit) and writing a [short paper](https://github.com/fuzzygreenblurs/3dof_control/blob/main/scara_esp_paper.pdf) summarizing the approach. This project was performed as a practical demonstration of linear transformations in the physical domain. The manipulator was made up of a Raspberry Pi that actuated 2 revolute servo joints and a prismatic joint (a rack-and-pinion controlled by a motor-encoder assembly). 
-{: style="text-align: justify"}
-
-<br>
-Here is a summary of the perception and control [logic](https://github.com/fuzzygreenblurs/3dof_control):
-0. A calibration measurement is performed to determine the pixel-to-cm mapping from image plane to world coordinates
-1. A monocular camera is used to perform background subtraction to determine the location of the target in the image coordinates
-2. A transformation is then used to convert these coordinates to 3D world coordinates
-3. An inverse kinematics operation is then used to determine the requisite revolute joint angles
-4. Finally, an RPi GPIO control signal is dispatched to the servos and motor-encoder to position the marker at the target
-{: style="text-align: justify"}
-
-I also put together a couple of [demo videos](https://www.youtube.com/playlist?list=PLoytQ1zm8QQB1rKg45-0EHJ8OXCNs55xg) to showcase this approach during the process of building the system.
-{: style="text-align: justify"}
-<br>

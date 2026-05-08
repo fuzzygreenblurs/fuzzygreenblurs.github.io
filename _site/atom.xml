@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
  <title>Akhil Sankar</title>
- <link href="http://localhost:4000/atom.xml" rel="self"/>
- <link href="http://localhost:4000/"/>
- <updated>2026-04-15T10:54:39-04:00</updated>
- <id>http://localhost:4000</id>
+ <link href="https://fuzzygreenblurs.github.io/atom.xml" rel="self"/>
+ <link href="https://fuzzygreenblurs.github.io/"/>
+ <updated>2026-05-08T00:40:26-04:00</updated>
+ <id>https://fuzzygreenblurs.github.io</id>
  <author>
    <name>Akhil Sankar</name>
    <email></email>
@@ -14,18 +14,18 @@
  
  <entry>
    <title>Hello.</title>
-   <link href="http://localhost:4000/2023/11/02/introduction/"/>
+   <link href="https://fuzzygreenblurs.github.io/2023/11/02/introduction/"/>
    <updated>2023-11-02T00:00:00-04:00</updated>
-   <id>http://localhost:4000/2023/11/02/introduction</id>
-   <content type="html">&lt;p&gt;My name is Akhil and I am a robotics and embedded systems engineer. 
+   <id>https://fuzzygreenblurs.github.io/2023/11/02/introduction</id>
+   <content type="html">&lt;p&gt;My name is Akhil and I am an embedded systems engineer.
 &lt;br /&gt;&lt;br /&gt;
-I have 8 years of professional software engineering experience, spanning from building web-based distributed systems (Ruby, JavaScript, Python) and robotic manipulators (Python, C++) to embedded systems (C) in the health wellness, smart home and farming automation spaces.
+I have nine years of professional software engineering experience, spanning production-scale distributed systems (Ruby, JavaScript, Python) and embedded firmware (C, C++) across IoT applications in the health wellness, smart home, and farming automation spaces. More recently, my work has centered on ARM Cortex-M bare-metal and RTOS-based firmware, drivers, BSPs, state machine design, and HIL testing.
 &lt;br /&gt;&lt;br /&gt;
-I am primarily interested in systems engineering of autonomous systems, with an emphasis on safety-critical design philosophies. To this end, I can operate across the spectrum: I touch mechatronics and real-time embedded systems as well as higher-level perception, state estimation and control domains. 
+I am primarily interested in electromechanical systems engineering, applying structured failure analysis and fault-tolerant design principles to meet safety-critical and performance targets. To this end, I can operate across the stack: from real-time embedded firmware and motor/actuator control up through state estimation and closed-loop control.
 &lt;br /&gt;&lt;br /&gt;
 Academically, I have a B.S. in Mechanical Engineering and an M.S. in Electrical &amp;amp; Computer Engineering from Rutgers University. As part of the Rutgers Swarm Intelligence Lab, I led the design of a novel electromagnetic actuator system providing closed-loop trajectory control of a swarm of magnetic payloads, mimicing live zebrafish. This work has since been &lt;a href=&quot;http://ieeexplore.ieee.org/document/11400697&quot;&gt;published&lt;/a&gt; in the IEEE: Transactions on Control Systems Technology Journal.
 &lt;br /&gt;&lt;br /&gt;
-I sometimes work on personal projects in my spare time. Check them out over in the &lt;a href=&quot;projects&quot;&gt;Projects&lt;/a&gt; section.&lt;/p&gt;
+Some of my other personal projects are listed &lt;a href=&quot;projects&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p style=&quot;text-align: justify&quot;&gt;&lt;br /&gt;
 Cheers!&lt;/p&gt;

@@ -3,6 +3,10 @@ layout: page
 title: Projects
 ---
 
+### [icarus-fc: 1D Hover Stabilizer (in-progress, C)](https://github.com/fuzzygreenblurs/icarus-fc)
+A bare-metal 1D hover stabilizer on STM32F446. The first hardware stage — a [discrete opto-isolated motor driver](/projects/icarus-fc/optoisolator-driver) — was built on a solderboard and bench-validated open-loop. MPU9250 IMU driver over SPI is in place; closed-loop PID control with complementary-filtered attitude feedback is the next phase.
+<br><br>
+
 ### [Vertical Farm Orchestrator (Python)](https://github.com/fuzzygreenblurs/vfarm)
 A scalable on-prem service-oriented architecture for vertical farm automation that ingests sensor data via MQTT, processes it via stream-based analytics, and coordinates actuator control using distributed locking for thread-safe resource management. It includes simulation, alerting, and comprehensive testing, with built-in support for horizontal scaling and a migration path to Kafka for larger deployments.
 <br><br>

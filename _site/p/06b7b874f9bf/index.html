@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark-poole">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+
+  <title>
+    
+      Mixed-Signal Hardware Design: Function Generator / Signal Analyzer &middot; Akhil Sankar
+    
+  </title>
+
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/assets/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/assets/favicon.ico">
+  <link rel="alternate" type="application/atom+xml" title="Akhil Sankar" href="/atom.xml">
+
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="Mixed-Signal Hardware Design: Function Generator / Signal Analyzer" />
+<meta name="author" content="Akhil Sankar" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Personal site of Akhil Sankar." />
+<meta property="og:description" content="Personal site of Akhil Sankar." />
+<link rel="canonical" href="https://fuzzygreenblurs.github.io/p/06b7b874f9bf/" />
+<meta property="og:url" content="https://fuzzygreenblurs.github.io/p/06b7b874f9bf/" />
+<meta property="og:site_name" content="Akhil Sankar" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-05-08T00:40:26-04:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Mixed-Signal Hardware Design: Function Generator / Signal Analyzer" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Akhil Sankar","url":"https://github.com/fuzzygreenblurs"},"dateModified":"2026-05-08T00:40:26-04:00","datePublished":"2026-05-08T00:40:26-04:00","description":"Personal site of Akhil Sankar.","headline":"Mixed-Signal Hardware Design: Function Generator / Signal Analyzer","mainEntityOfPage":{"@type":"WebPage","@id":"https://fuzzygreenblurs.github.io/p/06b7b874f9bf/"},"url":"https://fuzzygreenblurs.github.io/p/06b7b874f9bf/"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+
+
+  <body>
+    <div class="container content">
+      <header class="masthead">
+        <h3 class="masthead-title">
+          <a href="/" title="Home">Akhil Sankar</a>
+
+          <nav class="nav">
+            
+            <small><a href="/projects">Projects</a></small>
+            
+          </nav>
+        </h3>
+      </header>
+
+      <main>
+        <article class="page">
+  <h1 class="page-title">Mixed-Signal Hardware Design: Function Generator / Signal Analyzer</h1>
+  <style>
+.msp-tabs nav.tab-nav {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0;
+  border-bottom: 1px solid var(--border-color);
+  margin: 0 0 2rem 0;
+  position: sticky;
+  top: 0;
+  background: var(--body-bg);
+  z-index: 10;
+  padding: 0.5rem 0;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+}
+.msp-tabs nav.tab-nav button {
+  background: none;
+  border: none;
+  padding: 0.45rem 0.65rem;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  flex: 0 0 auto;
+  color: var(--body-color);
+  opacity: 0.55;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: opacity 0.12s ease, border-color 0.12s ease;
+}
+.msp-tabs nav.tab-nav button:hover { opacity: 0.85; }
+.msp-tabs nav.tab-nav button.active {
+  opacity: 1;
+  color: var(--heading-color);
+  border-bottom-color: var(--heading-color);
+  font-weight: 600;
+}
+.msp-tabs .tab-pane { display: none; }
+.msp-tabs .tab-pane.active { display: block; }
+.msp-tabs .tab-pane h2 { margin-top: 0.5rem; margin-bottom: 1.25rem; }
+.msp-tabs .tab-pane h3 { margin-top: 2.75rem; margin-bottom: 0.85rem; }
+.msp-tabs .tab-pane h4 { margin-top: 2rem; margin-bottom: 0.65rem; }
+.msp-tabs .tab-pane h3 + p,
+.msp-tabs .tab-pane h4 + p { margin-top: 0; }
+.msp-tabs .tab-footer {
+  margin-top: 3.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+}
+.msp-tabs .tab-footer a { text-decoration: none; }
+.msp-tabs .tab-footer span.spacer { flex: 1; }
+.msp-callout {
+  border-left: 3px solid var(--border-color);
+  padding: 0.75rem 1rem;
+  margin: 1.5rem 0;
+  font-size: 0.92rem;
+  opacity: 0.85;
+}
+.msp-appendix h3 { margin-top: 2rem; }
+.msp-appendix ul li { margin-bottom: 0.35rem; }
+.msp-appendix .tbd { opacity: 0.55; font-style: italic; }
+</style>
+
+<div class="msp-tabs">
+
+<nav class="tab-nav" aria-label="Project sections">
+  <button data-tab="intro">Introduction</button>
+  <button data-tab="parts">Part Selection</button>
+  <button data-tab="power">Power Supply</button>
+  <button data-tab="mcu">MCU / USB / SWD</button>
+  <button data-tab="adc">ADC / DAC</button>
+  <button data-tab="appendix">Appendix</button>
+</nav>
+
+<section class="tab-pane" id="tab-intro">
+
+    <h2 id="introduction">Introduction</h2>
+
+    <div class="msp-callout">
+      <p><strong>Note:</strong> This text is a personal writeup of design reasoning. The accompanying schematics, diagrams, and slide-style figures from the source course have been intentionally omitted from this public page pending permission and/or replacement with my own original captures.</p>
+    </div>
+
+    <h3 id="attribution">Attribution</h3>
+
+    <p><strong>This project does not claim to be a novel design</strong> and is instead meant to be a discussion in hardware design, following the principles detailed in the <a href="https://www.phils-lab.net/courses">Phil’s Lab Mixed-Signal Hardware Design</a> course. Credit is attributed to Phil Salmony for providing the project objective, system level constraints and best practices to design for real-world hardware.</p>
+
+    <p>However, the course neglects to provide fundamental theoretical reasoning for many of these specific practices. This document attempts to fill in those gaps, acting as a self-contained justification for the entire system design, and further supplementing the course material.</p>
+
+    <h3 id="objective">Objective</h3>
+
+    <p>This document details a first-principles approach to designing an AC/DC mixed-signal printed circuit board (PCB) to analyze an incoming and/or generate an outgoing single-channel, low-voltage, audio-band frequency signal. Roughly speaking, this system mimics a simple function generator and analyzer (similar to a PC-based oscilloscope). This is a generic hardware design, serving as a useful starting point for test and measurement instrumentation electronics.</p>
+
+    <p>This design employs commercial off-the-shelf components and focuses primarily on macro design considerations, abstracting away the low-level specifics of individual ICs in favor of system-level reasoning to achieve the stated objective.</p>
+
+    <h3 id="system-requirements">System Requirements</h3>
+
+    <ol>
+      <li><strong>Low voltage supply:</strong>
+        <ul>
+          <li>Voltage: 5V</li>
+          <li>Current: &lt; 500 mA</li>
+          <li>Max power: 2.5 W</li>
+        </ul>
+
+        <p><em>A standard USB-based power supply can meet these requirements. This USB line can also be used as a data line to perform control and data streaming.</em></p>
+      </li>
+      <li><strong>Low (audio) signal frequency band: 20 Hz - 20 kHz</strong>
+        <ul>
+          <li>ADC: required to support signal analyzer</li>
+          <li>DAC: required to support signal generator</li>
+          <li>Anti-aliasing: &gt; 40 kHz sampling rate capability to meet Nyquist Criterion</li>
+          <li>Resolution: 12-bit sample size to minimize quantization error sufficiently</li>
+          <li>Bandwidth requirement: 0.48 Mbit/sec</li>
+        </ul>
+
+        <p><em>Low frequency signals are selected as an initial constraint, requiring a lower sampling rate and therefore keeping the overall data bandwidth requirements smaller and easier to design against. USB 2.0 Full Speed mode can support &lt;12 Mbit/sec data rates, more than sufficient for this requirement. Many STM32 microcontrollers already support this protocol without added configuration.</em></p>
+      </li>
+      <li><strong>Processor: interfaces with data converters (ADC/DAC) and USB host (PC)</strong>
+        <ul>
+          <li>FPGAs are ideal for high-bandwidth, parallelism and DSP workloads</li>
+          <li>Microcontrollers:
+            <ul>
+              <li>sufficient for low bandwidth, non-DSP workloads</li>
+              <li>easier to flash and debug (SWD or JTAG interfaces)</li>
+              <li>serial UART-based debugging is unnecessary</li>
+              <li>can interface over USB without added configuration</li>
+            </ul>
+          </li>
+          <li>Data converters interface with the processor over a faster serial interface:
+            <ul>
+              <li>I²C: too slow for this application</li>
+              <li>LVDS or massive parallel buses are also an option but overkill here</li>
+              <li>SPI is sufficiently fast for this application</li>
+            </ul>
+          </li>
+        </ul>
+
+        <p><em>The ARM Cortex-M0 microcontroller line (least powerful in the Cortex-M line) is sufficient for this application. It will interface with the host over USB and with the ADC/DAC data converters over SPI. A simple SWD interface is selected as a debugging interface.</em></p>
+      </li>
+      <li><strong>Power supply: subdivided to support the analog and digital circuitry individually.</strong> Both regulators step down the 5V main USB supply to a dedicated 3.3V supply.
+        <ul>
+          <li>Analog circuitry: supplied by a simple linear (LDO) regulator
+            <ul>
+              <li>Not very tolerant to noise: avoid switching components in circuitry</li>
+              <li>Typically requires a small current draw (~10 mA)</li>
+              <li>Regulator efficiency is therefore not an issue: use a linear regulator</li>
+            </ul>
+          </li>
+          <li>Digital circuitry:
+            <ul>
+              <li>More tolerant to noise than analog circuitry</li>
+              <li>Requires higher current draw (~100 mA)</li>
+              <li>Supply using a more power-efficient switching regulator (ex. buck converter)</li>
+            </ul>
+          </li>
+          <li>Filtering: the USB power rail is prone to noise (depending on cable, host, etc.)
+            <ul>
+              <li>Input voltage is nominally +5V but can drop to +4.5V</li>
+              <li>Must watch out for regulator dropout voltages</li>
+              <li>Must consider EMI/ESD and ESR/ESL effects</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li><strong>Additional front-end (facing the physical environment) circuitry:</strong>
+        <ul>
+          <li><strong>ADC:</strong>
+            <ul>
+              <li>High input impedance: &gt;1 MΩ (similar to oscilloscopes)</li>
+              <li>This avoids disturbing or drawing much current from the measured circuitry</li>
+              <li>ESD protection: manual handling of connectors, probing signals, etc.</li>
+              <li>RF filtering to prevent aliasing and spurious noise in the input signal</li>
+            </ul>
+          </li>
+          <li><strong>DAC:</strong>
+            <ul>
+              <li>Low output impedance: &lt;50 Ω</li>
+              <li>ESD protection: manual handling of connectors, driving loads, etc.</li>
+              <li>Reversed layout of the ADC pipeline</li>
+            </ul>
+          </li>
+          <li><strong>Converter options:</strong> single-ended-to-differential, differential-to-single-ended.</li>
+        </ul>
+      </li>
+      <li><strong>Other considerations:</strong>
+        <ul>
+          <li>Mechanical: PCB dimension constraints (mounting holes, connector placement, encasing)</li>
+          <li>Connectors: SMA, BNC, GPIO, etc.</li>
+          <li>Peripherals: use LEDs for debugging, power-on indication, user friendliness</li>
+          <li>Timing: crystal frequencies</li>
+          <li>ESD protection and filtering for EMC (electromagnetic compatibility)</li>
+          <li>Biasing circuitry: most electronics are powered by a single power supply, and both the digital and analog circuitry rely on this</li>
+        </ul>
+      </li>
+    </ol>
+
+    <div class="tab-footer">
+  <span class="spacer"></span>
+  <a href="#parts" data-tab-link="parts">Part Selection &rarr;</a>
+</div>
+
+  </section>
+
+<section class="tab-pane" id="tab-parts">
+
+    <h2 id="part-selection">Part Selection</h2>
+
+    <h3 id="low-dropout-ldo-regulator-ht75xx-family">Low Dropout (LDO) Regulator: HT75XX family</h3>
+
+    <ol>
+      <li>Low dropout (difference between input and output voltage): ~25 mV</li>
+      <li>Can support ~100 mA output current (greater than the ~50 mA requirement)</li>
+      <li>Only requires small input/output smoothing capacitors</li>
+      <li>Small SOT package available (SOT-23 vs SOT-89): easy to solder and debug</li>
+    </ol>
+
+    <p><img src="/assets/images/mixed-signal-pcb/image9.png" alt="HT75XX family — Holtek datasheet excerpt" /></p>
+
+    <h3 id="switching-regulator-dc-dc-tlv62569p-buck-converter">Switching Regulator (DC-DC): TLV62569P buck converter</h3>
+
+    <ol>
+      <li>Highly efficient (95%) supply for digital circuitry exclusively</li>
+      <li>Steps down 5V to 3.3V, sourcing up to 100-250 mA</li>
+      <li>Feedback resistors allow for closed-loop control of variable loads
+        <ul>
+          <li>At higher switching frequencies, surrounding filter components are smaller, yielding smaller form factors</li>
+        </ul>
+      </li>
+    </ol>
+
+    <p><img src="/assets/images/mixed-signal-pcb/image56.png" alt="TLV62569P functional block — TI datasheet" /></p>
+
+    <p><img src="/assets/images/mixed-signal-pcb/image59.png" alt="TLV62569P typical application — TI datasheet" /></p>
+
+    <h3 id="supporting-components-for-analog-circuitry">Supporting components for analog circuitry</h3>
+
+    <ol>
+      <li>Op-amps used for active filters (combined with passives and buffers)
+        <ul>
+          <li>Single supply, rail-to-rail low voltage (0 - 3.3V inclusive) supply</li>
+          <li>BJT vs MOSFET: a FET has higher input impedance and lower bias current — good for a high-impedance input stage</li>
+          <li>Bandwidth: how much gain you can get based on input frequency. We have low bandwidth requirements.</li>
+          <li>Stability and decoupling capacitors are considered later on</li>
+        </ul>
+      </li>
+      <li>Passive components
+        <ul>
+          <li>Minimize Johnson noise caused by selected non-ideal resistors</li>
+          <li>Johnson noise is a function of temperature and resistance value (reduce R values, within reason)</li>
+        </ul>
+      </li>
+    </ol>
+
+    <h3 id="moving-into-schematic-design">Moving into Schematic Design</h3>
+
+    <p>Section the schematic into:</p>
+
+    <ul>
+      <li>Power</li>
+      <li>MCU</li>
+      <li>ADC</li>
+      <li>DAC</li>
+    </ul>
+
+    <p>Divvy the schematic into logical blocks for readability and modular design. Each logical block has its own section dedicated to schematic design in this document.</p>
+
+    <div class="tab-footer">
+  <a href="#intro" data-tab-link="intro">&larr; Introduction</a>
+  <a href="#power" data-tab-link="power">Power Supply &rarr;</a>
+</div>
+
+  </section>
+
+<section class="tab-pane" id="tab-power">
+
+    <h2 id="schematic-power-supply">Schematic: Power Supply</h2>
+
+    <p>The overall power-supply schematic is composed of:</p>
+
+    <ol>
+      <li>A linear (LDO) regulator across the top</li>
+      <li>A switching (buck) regulator across the bottom</li>
+      <li>A bias generator on the right</li>
+      <li><strong>V_BUS</strong>: the +5V source from the USB Type-C connector</li>
+    </ol>
+
+    <h3 id="input-filter--filter-network-clc">Input Filter: π-filter network (CLC)</h3>
+
+    <ol>
+      <li>The inductor has a DC resistance of 0.15 Ω.
+        <ul>
+          <li>Without this resistance, the filter becomes a resonant circuit (very sharp peak at a specific frequency). The added resistance damps this resonant peak.</li>
+          <li>Cutoff frequency of about 1.6 MHz, which is high enough for our application — we just want to damp out high-frequency noise. Transients drawn by ICs require high frequencies, which we don’t want to damp too much.</li>
+        </ul>
+      </li>
+      <li>It can also support a maximum DC current of 500 mA.
+        <ul>
+          <li>Usually drawing much less current (~150 mA)</li>
+          <li>Design for redundancy to allow for spiking</li>
+        </ul>
+      </li>
+    </ol>
+
+    <h4 id="aside-rlc-filters">Aside: RLC Filters</h4>
+
+    <ul>
+      <li>Placing a capacitor in parallel with the V_in source makes the filter “bi-directional” (as in the π-filter approach).</li>
+      <li>This is a 2nd-order filter, with sharper rolloff than RC filters.</li>
+      <li>DC (low-frequency component) loss relies mainly on R. Higher R values lead to more DC loss, since damping causes the resonance peak to widen.</li>
+    </ul>
+
+    <p>A bode plot of this filter shows that it is indeed a low-pass filter for high-frequency noise — perfect for a power filter. For high-speed digital circuitry, perform the <em>minimum</em> amount of filtering possible (just enough to pass EMI testing) because transients drawn by ICs require high-frequency currents which we don’t want to damp out too much.</p>
+
+    <p>Without the R component, we’d see resonance (~40 dB) at about 1.5 MHz. Avoid these peaks in power supplies.</p>
+
+    <h3 id="ldo-regulator-configuration">LDO Regulator Configuration</h3>
+
+    <p>The configuration matches the manufacturer-suggested layout, but with larger capacitors. Capacitance has tolerance up to 20%, and applying a DC bias across capacitors causes the effective capacitance to drop further, so we over-spec. The datasheet suggests 10 µF; we use 22 µF instead.</p>
+
+    <p>We have +5V along V_in and +3.3V (annotated VA for “analog source”) generated at the output. The resistor on the input has a power rating of at least 1/8 W. Together with the input capacitor, this forms a simple RC filter.</p>
+
+    <h4 id="aside-rc-filters">Aside: RC Filters</h4>
+
+    <ul>
+      <li>RC filters can be used to create LP or HP filters</li>
+      <li>We can cascade them to form a bandpass (within reason — cascading causes impedance and loading problems)</li>
+      <li>The cutoff frequency (“half-power bandwidth”) is when the gain of the filter goes to \(1/\sqrt{2}\). This is true for both LP and HP.</li>
+      <li>Lower frequencies are relatively unaffected</li>
+      <li>RC filters have a much slower rolloff compared to RLC. Use them only when noise filter requirements are much less stringent.</li>
+    </ul>
+
+    <p>Returning to the RC filter at the input of the LDO: the cutoff frequency is relatively low, but it doesn’t matter because the LDO is a low-frequency analog supply.</p>
+
+    <p><strong>Schematic note: ALWAYS NAME EVERY SINGLE NET (annotations to wires/networks). The default names are not readable.</strong></p>
+
+    <p>There is another reason for the RC filter feeding the input of the LDO: the switching regulator below can generate noise that traverses backward through the overall circuit, into the LDO and input supplies. <strong>Any switching noise generated will be attenuated by the RC filter as well.</strong></p>
+
+    <p>The switching noise is likely lower frequency, which is why the RC filter will attenuate it — the π-filter at the USB input only attenuates very high-frequency (MHz-level) noise.</p>
+
+    <h3 id="buck-converter-circuitry">Buck Converter Circuitry</h3>
+
+    <ul>
+      <li>The BC datasheet specifies the associated components.</li>
+      <li>The output voltage can be calculated using the equation given in the datasheet, based on the selected resistor feedback network. This is used to self-regulate the buck converter to continue to provide the correct voltage for a changing load.</li>
+      <li>A maximum output current of 250 mA is specified.</li>
+    </ul>
+
+    <h4 id="specifying-the-bc-components">Specifying the BC components</h4>
+
+    <p>Different ICs include some of these parts internally, but for the TLV62569P the components needed are:</p>
+
+    <ol>
+      <li><strong>Input capacitor</strong> on the input rail (could be multiple caps for larger capacitance)</li>
+      <li><strong>Output inductor</strong></li>
+      <li><strong>Output capacitor</strong> (might need multiple)</li>
+      <li><strong>Feedback resistor network</strong> (R101 / R102)
+        <ul>
+          <li>Sometimes includes compensation capacitors to alter the output frequency response</li>
+          <li>The output voltage is divided through this network and fed back to a feedback pin, allowing the IC to stabilize the output value at the desired voltage</li>
+          <li>Different R values yield different output voltages for the same input voltage</li>
+        </ul>
+      </li>
+      <li>Some BC ICs require an external diode or FET, but this specific IC is simple. Always check the datasheet.</li>
+    </ol>
+
+    <p><strong>Selecting the correct sized inductor is a very important part of buck converter design.</strong> The minimum inductance is given by a standard formula in most switching/BC datasheets, depending on:</p>
+
+    <ul>
+      <li>Output voltage</li>
+      <li>Input voltage</li>
+      <li>Switching frequency of the regulator</li>
+      <li>Inductor ripple current (some constant times the maximum expected load)</li>
+    </ul>
+
+    <p><strong>Takeaways:</strong></p>
+
+    <ul>
+      <li>Larger switching frequency → smaller L → smaller inductor package (good)</li>
+      <li>Larger relative input-to-output voltage → larger L (not good); here +5V → +3.3V, so not very large</li>
+      <li>We typically aim for ~20-30% ripple current compared to max output current</li>
+    </ul>
+
+    <p>For our specific application:</p>
+
+    <ul>
+      <li>For V_in − V_out, consider the largest difference (when V_in is highest at +5V)</li>
+      <li>F_sw = 1.5 MHz</li>
+      <li>I_max = 250 mA → ripple current should be 0.25 × I_max = 62.5 mA</li>
+      <li>Thus L_min = 12 µH</li>
+      <li>Choose a standard value: L = 15 µH (accounting for inductor 20% tolerance)</li>
+      <li>Ensure specified max DC current and saturated current are much higher than expected/peak values</li>
+      <li>Always use shielded inductors where possible to minimize radiation</li>
+    </ul>
+
+    <p>We derived this value based on the extreme case of 250 mA. However, our general case will be significantly less, driving down the ripple current and therefore driving up L. Recall that the ripple current can be represented as a fraction of the actual current, given by \(K \cdot I_L\).</p>
+
+    <p>Lighter loads require larger inductors. We therefore choose <strong>68 µH</strong>, because we are expecting really light loads.</p>
+
+    <p>Next, consider the datasheet for the BC IC (TLV62569) for input and output capacitor selection:</p>
+
+    <ul>
+      <li><strong>Input capacitor</strong>: ≥ 4.7 µF. We use 22 µF wherever possible for BOM consolidation.</li>
+      <li><strong>Output capacitor</strong>: 22 µF is reasonable per the datasheet table.</li>
+    </ul>
+
+    <p><img src="/assets/images/mixed-signal-pcb/image31.png" alt="TLV62569 input capacitor table — TI datasheet" /></p>
+
+    <p><img src="/assets/images/mixed-signal-pcb/image54.png" alt="TLV62569 output capacitor table — TI datasheet" /></p>
+
+    <p>Finally, select the feedback resistor network using the equation in the datasheet:</p>
+
+    <p><img src="/assets/images/mixed-signal-pcb/image61.png" alt="TLV62569 feedback formula — TI datasheet" /></p>
+
+    <p>These resistors will have some tolerance — select 1% tolerance to achieve values closest to expected theoretical output.</p>
+
+    <p>The datasheet also recommends adding a DNP (Do Not Place) capacitor to the output. In the PCB design, pads will be available to optionally add this capacitor later. This is done so that if the BC is not stable, the cap can be manually soldered on. <strong>Add DNP parts freely.</strong></p>
+
+    <h4 id="power-on-led">Power-On LED</h4>
+
+    <p>It is a good idea to add a PWR ON LED for testing downstream (especially for early-stage boards). The LED indicates that some sort of power circuitry is working.</p>
+
+    <p>Selecting the current-limiting resistor:</p>
+
+    <ul>
+      <li>LED forward voltage depends on color and current at that moment</li>
+      <li>Choose a suitable forward current I_f (≤ 2 mA) for debugging — 10–20 mA for brighter LEDs</li>
+      <li>For 2 mA, the corresponding forward voltage is ~2.9 V; we use &lt;1 mA so V_f ≈ 2.8 V</li>
+      <li>Current-limiting resistor: \(R = (V_{dd} - V_f) / I_f = (3.3\text{V} - 2.8\text{V}) / 1\text{mA} = 500\,\Omega\)</li>
+      <li>Select 1 kΩ to be safe (yields ~0.5 mA)</li>
+    </ul>
+
+    <h3 id="bias-generator">Bias Generator</h3>
+
+    <p>We are running the analog circuitry from +3.3 V_A to GND, not +3.3 V_A to −3.3 V_A. This is considered a single supply. Op-amps do not work well with single supplies — when using a single supply into an op-amp, we need to bias their input (or one of their inputs) with ½ the supply voltage.</p>
+
+    <p>This way, the AC signal is super-imposed (0 V is at 1.65 V) over this “shifted” voltage, so it can swing between −1.65 V and +1.65 V instead.</p>
+
+    <p>The equally-sized resistors evenly divide the input voltage to generate the REF +1.65 V value (which acts as virtual 0 V). C107 (22 µF) together with the two resistors forms an RC filter with a calculated cutoff of 15 Hz.</p>
+
+    <p>We then use a voltage-follower configuration of an op-amp to yield the bias output VCOM. This is a common configuration in the analog frontend.</p>
+
+    <h4 id="voltage-followers-in-depth">Voltage Followers in Depth</h4>
+
+    <p><strong>Ideal Op-Amp Rules:</strong></p>
+
+    <ul>
+      <li>Under feedback, the op-amp will tend to match its input voltages so \(V_+ = V_-\)</li>
+      <li>No current flows into the op-amp (infinite input impedance)</li>
+      <li>The gain should be lossless (zero output impedance)</li>
+    </ul>
+
+    <p><strong>Running from a single supply:</strong></p>
+
+    <ul>
+      <li>The op-amp must be biased at \(V_{cc}/2\) to allow for full input/output swing</li>
+      <li>AC signals are coupled onto the bias via coupling capacitors</li>
+    </ul>
+
+    <p>The op-amp follower configuration has its non-inverting input connected directly to VREF and its inverting input connected to the output. This:</p>
+
+    <ul>
+      <li>Provides stable bias voltage</li>
+      <li>Heavily filters the bias voltage (reduces noise from power supply)</li>
+      <li>Yields high input impedance and low output impedance</li>
+    </ul>
+
+    <h4 id="decoupling--bypass-capacitors">Decoupling / Bypass Capacitors</h4>
+
+    <p>A small capacitor is connected between ground and the power rail — a decoupling/bypass capacitor, typically placed as close as possible to the relevant power pin of the IC. <strong>Decoupling/bypass capacitors</strong> isolate IC supply pins from rail noise; <strong>coupling/blocking capacitors</strong> pass AC while blocking DC bias between stages.</p>
+
+    <div class="tab-footer">
+  <a href="#parts" data-tab-link="parts">&larr; Part Selection</a>
+  <a href="#mcu" data-tab-link="mcu">MCU / USB / SWD &rarr;</a>
+</div>
+
+  </section>
+
+<section class="tab-pane" id="tab-mcu">
+
+    <h2 id="schematic-microcontroller-usb-swd-esd-protection">Schematic: Microcontroller, USB, SWD, ESD Protection</h2>
+
+    <p>We use the STM32F1 microcontroller alongside USB, SWD, and ESD-protection circuitry. The schematic is composed of:</p>
+
+    <ol>
+      <li>Microcontroller circuitry on the left</li>
+      <li>USB circuitry on the right</li>
+      <li>RGB LED and Serial Wire Debug (SWD) circuitry on the bottom</li>
+    </ol>
+
+    <h3 id="mcu-layout">MCU Layout</h3>
+
+    <h4 id="power-pins-top">Power Pins (top)</h4>
+
+    <ul>
+      <li><strong>VDD</strong>: power for digital circuitry
+        <ul>
+          <li>Per VDD pin, connect a 100 nF capacitor very close to the respective pin (reduces ESR/ESL effects)</li>
+          <li>Also include 1 larger 10 µF bulk decoupling capacitor close to the IC</li>
+        </ul>
+      </li>
+      <li><strong>VDDA</strong>: power for analog circuitry (for possible ADC/DACs onboard the MCU)
+        <ul>
+          <li>If not using the analog components on the MCU, it’s fine to tie this to 3.3 V</li>
+          <li>For demo purposes the supply is filtered per the recommended configuration in the ST datasheet (decoupling cap + π-filter)</li>
+        </ul>
+      </li>
+      <li><strong>VBAT</strong>: can be tied to a battery to keep RTC running
+        <ul>
+          <li>We are not using RTC, so we tie it to 3.3 V</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4 id="gnd-pins-bottom">GND Pins (bottom)</h4>
+
+    <p>Use a common ground so all VSS and VSSA pins are tied together. Don’t split this just because we have VSS vs VSSA.</p>
+
+    <h4 id="configuration-pins">Configuration Pins</h4>
+
+    <ul>
+      <li><strong>NRST</strong>: active-low reset pin — can trigger a HW reset by pulling LOW
+        <ul>
+          <li>Pull this pin up using a 40 kΩ (or higher) resistor</li>
+          <li>Can also use a pushbutton to reset manually</li>
+          <li>We connect it to the SWD header instead (discussed later)</li>
+        </ul>
+      </li>
+      <li><strong>BOOT0</strong>: common on all STM32 MCUs
+        <ul>
+          <li>Tells the chip on startup whether to enable the internal bootloader</li>
+          <li>LOW: run flashed program</li>
+          <li>HIGH: listen for debug/programming signals on various ports (USB/UART/etc) and will not run the main program until pulled LOW and the system is reset</li>
+          <li>Can be connected to a DIP switch for toggling</li>
+          <li>Typically pulled down using a 10 kΩ resistor; for non-SWD programming, jumper to the resistor pad and pull HIGH</li>
+        </ul>
+      </li>
+      <li><strong>HSE_IN &amp; HSE_OUT</strong>: pins for the High-Speed External crystal
+        <ul>
+          <li>STM32 has its own internal high- and low-speed crystals (not accurate)</li>
+          <li>For UART/USB it is better to use an external crystal for timing reference</li>
+          <li>Circuitry discussed in ST Application Note AN2867 (oscillator design guide for STM32)</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4 id="crystal-oscillator-design">Crystal Oscillator Design</h4>
+
+    <p>From AN2867, the MCU side contains a driver (inverter) with a feedback resistor. We need to place an external feed resistor, crystal, and load capacitors.</p>
+
+    <ul>
+      <li>C_s is stray capacitance caused by loads, PCB routing, and traces (cannot choose this)</li>
+      <li>We choose the crystal, feed resistor and load capacitors</li>
+    </ul>
+
+    <p><strong>Crystal:</strong></p>
+
+    <ul>
+      <li>Frequency f₀ = 16 MHz with low tolerance (PPM)</li>
+      <li>Load capacitance C₀ in the pF range</li>
+      <li>ESR ≈ 80 Ω</li>
+      <li>4-pin packages typical: 2 GND pins, 2 I/O / bidirectional</li>
+    </ul>
+
+    <p><strong>Stray capacitance:</strong> typically 3-5 pF, sometimes higher.</p>
+
+    <p>For our crystal: f₀ = 16 MHz, load capacitance = 10 pF, ESR = 80 Ω. The added load capacitors work out to ~10–14 pF each.</p>
+
+    <p>Next, the <strong>feed resistor R_ext</strong> is specified. The feed resistor:</p>
+
+    <ul>
+      <li>Forms a low-pass filter with the load capacitors</li>
+      <li>Limits harmonics — placing the cutoff above the fundamental frequency limits distortion</li>
+      <li>Reduces the inverter drive strength so the crystal isn’t overdriven</li>
+      <li>Often is not even necessary — place a 0 Ω (DNP) resistor instead, then swap in a real resistor if timing issues arise</li>
+    </ul>
+
+    <p>In our schematic, R201 = 0 Ω and the load capacitors C208/C209 = 10 pF.</p>
+
+    <h4 id="pinout-selection">Pinout Selection</h4>
+
+    <p>This circuitry is sufficient to power the chip. Next, choose the pinout for the connected devices:</p>
+
+    <ul>
+      <li><strong>SPI1</strong> (right): for the external DAC</li>
+      <li><strong>SPI2</strong> (left): for the external ADC</li>
+      <li><strong>GPIOs</strong>: DAC_NCLR, DAC_NLDAC</li>
+      <li><strong>TIM4</strong>: timer channels for the RGB LED (PWM with varying duty cycle for brightness)</li>
+      <li><strong>USB_D</strong>: differential USB lines</li>
+      <li><strong>SWD pins</strong>: SWDIO, SWCLK and SWO</li>
+    </ul>
+
+    <h3 id="stm32cubeide-pin-configuration">STM32CubeIDE: Pin Configuration</h3>
+
+    <p>STM32CubeIDE is used for pinout planning and to expose the alternate functions available on each pin. This is convenient for PCB routing — pin assignments may shift over the design lifecycle based on routing convenience.</p>
+
+    <blockquote>
+      <p>File → New → STM32 project → MCU/MPU Selector → STM32F103CB</p>
+    </blockquote>
+
+    <p>For SWD we enable Trace Asynchronous SW under the <strong>SYS</strong> tab and select 3 pins: SWDIO, SWCLK and SWO (optional, useful for live variable monitoring).</p>
+
+    <p>Next, set up the HSE via the <strong>RCC</strong> (clock) tab.</p>
+
+    <p>For RGB LED PWM, configure any free timer (TIM4 chosen here) for 3 PWM channels (R, G &amp; B).</p>
+
+    <p>Enable SPI1 and SPI2 for the data converters. The STM32 acts as master:</p>
+
+    <ul>
+      <li><strong>SPI1</strong>: ADC (Receive Only Master)</li>
+      <li><strong>SPI2</strong>: DAC (Transmit Only Master)</li>
+    </ul>
+
+    <p>The Hardware NSS Output Signal option provides chip-select handling.</p>
+
+    <p>For USB, this STM32 has an integrated full-speed (12 Mbps) physical layer, so the associated pins simply need to be enabled in the USB OTG peripheral configuration.</p>
+
+    <p>This concludes pinout planning. Future configuration includes USB middleware selection and clock configuration (via the clock tree diagram, not essential for PCB design).</p>
+
+    <p>These pinouts are then transcribed to KiCad. Other components added include:</p>
+
+    <ul>
+      <li>Pull-up resistors for the SPI HW chip-select lines (in case the lines aren’t driven by GPIO)</li>
+      <li>USB differential pair lines named USB_D− and USB_D+ — KiCad uses this naming to recognize a differential pair, used later when routing as a controlled-impedance pair</li>
+    </ul>
+
+    <p>See ST App Note AN4879 for USB hardware and PCB guidelines for STM MCUs. Per Table 3 (and footnote 2 for our MCU), the USB_DP pin must be pulled up to 3.3 V using a 1.5 kΩ resistor:</p>
+
+    <p><img src="/assets/images/mixed-signal-pcb/image49.png" alt="ST AN4879 — USB pull-up table" /></p>
+
+    <p><img src="/assets/images/mixed-signal-pcb/image1.png" alt="ST AN4879 — pull-up footnote for STM32F103" /></p>
+
+    <h3 id="rgb-led-layout">RGB LED Layout</h3>
+
+    <p>Following the same approach as the power-supply current-limiting resistor, we use 1 kΩ resistors per PWM channel. Each color has a different forward voltage; this doesn’t matter much because PWM duty cycles can be tuned for desired brightness.</p>
+
+    <p>A decoupling capacitor is used because of the switching nature of duty cycles — good practice for any switching component.</p>
+
+    <h3 id="usb-connector-layout">USB Connector Layout</h3>
+
+    <p>The USB rail carries both power and data. The Type-C connector has many more pins than Type-A/B.</p>
+
+    <p>The USB connector circuitry is divided into 3 subsections: <strong>Type-C connector</strong>, <strong>ESD protection</strong>, <strong>common-mode choke</strong>.</p>
+
+    <p>See ST AN4879 for pull-up resistor guidance and per-MCU USB capabilities. The 1.5 kΩ pull-up on USB_D+ was discussed earlier; that pin can also be toggled via GPIO to trigger a reset, which helps when the device gets stuck during debugging.</p>
+
+    <ol>
+      <li><strong>The USB supply is likely very noisy</strong> (long cable, EM/ES pickup, possibly noisy host)
+        <ul>
+          <li>Use an RLC π-filter as in the power supply</li>
+        </ul>
+      </li>
+      <li><strong>Use low-capacitance ESD protection</strong> due to USB’s high bandwidth
+        <ul>
+          <li>Place ESD protection as close to the connector as possible</li>
+          <li><strong>USBLC6-2SC6</strong>: common ESD protection IC for USB 2.0</li>
+          <li>Add a small decoupling cap at the power pin (protects VBUS and data pins)</li>
+        </ul>
+      </li>
+      <li><strong>Data line filtering</strong>: optional for USB 2.0
+        <ul>
+          <li>We use a common-mode choke</li>
+          <li>USB is not entirely differential, so a common-mode choke is not always optimal — it improves EMC but can degrade signal integrity</li>
+        </ul>
+      </li>
+    </ol>
+
+    <p>USB Type-C requires specific considerations — see App Note TA0357.</p>
+
+    <p>Many Type-C connectors can deliver up to 100 W (20 A @ 5 V), which is overkill for our application. Add two separate 5 kΩ pull-down resistors on CC1 and CC2 (configuration channel) to signal to the host that a device is connected and to provide up to 500 mA @ +5 V.</p>
+
+    <p>When choosing the common-mode choke, ensure it is rated to the desired frequency — USB 2.0 is fast, so size it correctly to avoid impeding speed. The common-mode choke also has differential impedance: ensure it matches the bus’s characteristic impedance. For USB, route traces as 90 Ω impedance pairs (discussed in the PCB design step). Note that USB is bidirectional, so the signal path works both ways.</p>
+
+    <h3 id="swd-header">SWD Header</h3>
+
+    <p>The standard SWD 10-pin header:</p>
+
+    <p><img src="/assets/images/mixed-signal-pcb/image50.png" alt="SWD 10-pin connector pinout" />
+<img src="/assets/images/mixed-signal-pcb/image65.png" alt="SWD 10-pin connector outline" /></p>
+
+    <ul>
+      <li>It really only needs 2 lines: CLK and DIO</li>
+      <li>SWO and NRST are not strictly required</li>
+      <li>SWO is included for variable tracking/plotting</li>
+      <li>NRST allows a hard reset of the MCU
+        <ul>
+          <li>A 100 nF capacitor (C212) with R213 forms a low-pass RC filter to prevent spurious resets (recommended by ST)</li>
+        </ul>
+      </li>
+      <li>Pins 4 and 7 are unconnected</li>
+      <li>Bidirectional <strong>TVS (Transient Voltage Suppression) diodes</strong> sit on the SWD lines as ESD protection
+        <ul>
+          <li>Placed close to the connector so human handling or built-up static can be dispersed safely</li>
+        </ul>
+      </li>
+      <li>Current-limiting resistors protect against shorting SWDIO to GND while it is driven HIGH (3.3 V)</li>
+    </ul>
+
+    <h4 id="what-is-swd">What is SWD?</h4>
+
+    <p>SWD is an in-circuit debug and programming method similar to JTAG:</p>
+
+    <blockquote>
+      <p>Host PC → USB cable → ST-Link (V2/V3) → ribbon adapter cable → SWD 10-pin header → MCU</p>
+    </blockquote>
+
+    <p>It only requires 2 data lines (DIO, CLK) plus GND, and enables monitoring variables, setting breakpoints, flashing code, etc. <strong>This is our preferred option.</strong></p>
+
+    <h4 id="tvs-diodes-and-esd-protection">TVS Diodes and ESD Protection</h4>
+
+    <p>We select the <strong>PESD3V3L1BA</strong> TVS diode:</p>
+
+    <ul>
+      <li>Bidirectional diode</li>
+      <li>Max peak pulse power: 500 W</li>
+      <li>Clamping voltage: 26 V (max voltage during over-voltage events)</li>
+      <li>ESD protection: &gt; 23 kV (per various ESD models)</li>
+      <li>Small SMD packaging (minimizes capacitance)</li>
+      <li><strong>Reverse stand-off voltage</strong> (working voltage): 3.3 V — what the diode is nominally rated for</li>
+      <li>Fairly low capacitance: 100 pF</li>
+    </ul>
+
+    <p>For high-speed buses we want low capacitance — higher capacitance increases rise/fall times and limits bus speed.</p>
+
+    <p><img src="/assets/images/mixed-signal-pcb/image45.png" alt="PESD3V3L1BA — Nexperia datasheet excerpt" /></p>
+
+    <p><img src="/assets/images/mixed-signal-pcb/image30.png" alt="PESD3V3L1BA — package outline" /></p>
+
+    <p>TVS diodes are a simple way to account for ESD effects.</p>
+
+    <div class="tab-footer">
+  <a href="#power" data-tab-link="power">&larr; Power Supply</a>
+  <a href="#adc" data-tab-link="adc">ADC / DAC &rarr;</a>
+</div>
+
+  </section>
+
+<section class="tab-pane" id="tab-adc">
+
+    <h2 id="schematic-adc-dac-and-analog-circuitry">Schematic: ADC, DAC and Analog Circuitry</h2>
+
+    <h3 id="adc">ADC</h3>
+
+    <p>ADC: TI’s <strong>ADC141S626</strong></p>
+
+    <ul>
+      <li>14-bit converter</li>
+      <li>50–250 kSamples/sec</li>
+      <li>Differential input</li>
+    </ul>
+
+    <p>We follow the ADC datasheet to lay out the data acquisition circuitry:</p>
+
+    <p><img src="/assets/images/mixed-signal-pcb/image15.png" alt="ADC141S626 typical application — TI datasheet" /></p>
+
+    <p>In our case we use different supply voltages (the rail along the top) and a different voltage reference.</p>
+
+    <p><strong>Important connections:</strong></p>
+
+    <ul>
+      <li><strong>Power supply:</strong>
+        <ul>
+          <li>Sources +3.3 V_A and +3V3 (digital) to the VA and VIO pins respectively</li>
+          <li>Both tied to a common ground (for PCB routing reasons)</li>
+        </ul>
+      </li>
+      <li><strong>Decoupling</strong>: 100 nF close to pins, 10 µF bulk capacitors (always consider BOM consolidation)</li>
+      <li><strong>Voltage reference</strong></li>
+      <li><strong>Differential input</strong> to the ADC</li>
+      <li><strong>Digital output</strong> D_OUT, feeds into the MCU over SPI</li>
+      <li>The CLK signal is routed through a series resistor (DNP, ~22 Ω) to reduce EMI/ringing — can also be applied to data lines for similar effect</li>
+    </ul>
+
+    <p>The ADC requires a fairly precise voltage reference at the VREF pin. A power supply regulator could supply this line, but the regulator voltage varies with load, is not particularly stable, and would be far noisier than a dedicated analog voltage reference. <strong>A dedicated analog voltage reference drastically improves ADC measurement accuracy.</strong></p>
+
+    <p>The voltage reference IC used is the <strong>REF3033AIDBZT</strong> (REF30XX family):</p>
+
+    <ul>
+      <li>50 ppm/°C</li>
+      <li>Low current draw (50 µA)</li>
+      <li>Easy SOT-23-3 package</li>
+      <li>Outputs 3.33 V (labeled ADC_VREF), indicated by the part number (3033)</li>
+      <li>Requires 100 nF decoupling and 10 µF bulk decoupling capacitors at the output</li>
+    </ul>
+
+    <p>Laying out the input circuitry:</p>
+
+    <ul>
+      <li>The input 5 V rail is very noisy</li>
+      <li>This is also a steady, slow analog reference</li>
+      <li>Perform additional heavy filtering using a π-filter
+        <ul>
+          <li>10 µF caps and series resistor: very low cutoff of ~319 Hz</li>
+          <li>The IC takes up to 45 mA input current → spec the resistor power rating accordingly</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3 id="adc-frontend">ADC Frontend</h3>
+
+    <p>The ADC frontend feeds the ADC. Its role is to provide an impedance conversion and an anti-alias filter feeding into the ADC. The ADC has a low impedance (~2 kΩ) and we want a much higher input impedance (e.g. an oscilloscope is typically ~1 MΩ).</p>
+
+    <p>Considering the left side of the circuit (starting from the BNC connector):</p>
+
+    <ul>
+      <li>BNC with ESD protection (PESD component, same as the digital section)</li>
+      <li>Input voltage must be in the range of ½ supply voltage (3.3 V), so −1.65 V to +1.65 V
+        <ul>
+          <li>More sophisticated designs (oscilloscopes) handle much wider input ranges via variable gain selection / attenuation</li>
+          <li>Our simple design is limited to supply rails</li>
+        </ul>
+      </li>
+    </ul>
+
+    <p><em>The DAC schematic, full PCB layout, routing and fabrication notes are in progress and will be added to this page.</em></p>
+
+    <div class="tab-footer">
+  <a href="#mcu" data-tab-link="mcu">&larr; MCU / USB / SWD</a>
+  <a href="#appendix" data-tab-link="appendix">Appendix &rarr;</a>
+</div>
+
+  </section>
+
+<section class="tab-pane msp-appendix" id="tab-appendix">
+
+    <h2 id="appendix-theory--references">Appendix: Theory &amp; References</h2>
+
+    <p>This section collects deeper-theory writeups and external references used to motivate the design choices throughout the project. Entries marked <em>TBD</em> are stubs to be filled in as the supporting writeups are authored.</p>
+
+    <h3 id="filtering--signal-conditioning">Filtering &amp; Signal Conditioning</h3>
+
+    <ul>
+      <li>RC filters — derivation of LP/HP cutoff, cascade impedance/loading effects. <span class="tbd">TBD</span></li>
+      <li>RLC filters — damped resonance, π-filter bidirectionality, 2nd-order rolloff. <span class="tbd">TBD</span></li>
+      <li>Anti-aliasing &amp; the Nyquist criterion. <span class="tbd">TBD</span></li>
+      <li><a href="https://www.daycounter.com/Calculators/RLC-Filter-Calculator.phtml">RLC online calculator</a></li>
+    </ul>
+
+    <h3 id="power-electronics">Power Electronics</h3>
+
+    <ul>
+      <li>LDO regulators — dropout voltage, headroom, stability. <span class="tbd">TBD</span></li>
+      <li>Buck converter design — inductor sizing, ripple current, feedback compensation. <span class="tbd">TBD</span></li>
+      <li>DC bias derating of MLCC capacitors. <span class="tbd">TBD</span></li>
+      <li>Decoupling vs bulk capacitance — placement, ESR/ESL. <span class="tbd">TBD</span></li>
+    </ul>
+
+    <h3 id="op-amps--analog">Op-Amps &amp; Analog</h3>
+
+    <ul>
+      <li>Single-supply biasing for op-amps. <span class="tbd">TBD</span></li>
+      <li>Voltage follower — input/output impedance derivation. <span class="tbd">TBD</span></li>
+      <li>Johnson noise vs resistor selection. <span class="tbd">TBD</span></li>
+      <li>Decoupling/bypass vs coupling/blocking capacitors. <span class="tbd">TBD</span></li>
+    </ul>
+
+    <h3 id="digital--communication">Digital &amp; Communication</h3>
+
+    <ul>
+      <li>SPI — clocking, NSS, master/slave handshaking. <span class="tbd">TBD</span></li>
+      <li>USB 2.0 — full-speed differential signaling, pull-ups, host enumeration. <span class="tbd">TBD</span></li>
+      <li>SWD vs JTAG — pin reduction and protocol overview. <span class="tbd">TBD</span></li>
+      <li>Crystal oscillator design — load capacitance, drive strength, R_ext. <span class="tbd">TBD</span></li>
+    </ul>
+
+    <h3 id="pcb-design-topics">PCB Design Topics</h3>
+
+    <ul>
+      <li>ESD protection (TVS diodes, clamping voltage, IEC 61000-4-2 model). <span class="tbd">TBD</span></li>
+      <li>EMI/EMC filtering at connector boundaries. <span class="tbd">TBD</span></li>
+      <li>Controlled-impedance differential pair routing (90 Ω for USB). <span class="tbd">TBD</span></li>
+      <li>Common-mode chokes — operation and trade-offs. <span class="tbd">TBD</span></li>
+    </ul>
+
+    <h3 id="standards--application-notes">Standards &amp; Application Notes</h3>
+
+    <ul>
+      <li><a href="https://www.st.com/resource/en/application_note/an2867-oscillator-design-guide-for-stm8afals-stm32-mcus-and-mpus-stmicroelectronics.pdf">ST AN2867 — Oscillator design guide for STM32</a></li>
+      <li><a href="https://www.st.com/resource/en/application_note/an4879-usb-hardware-and-pcb-guidelines-using-stm32-mcus-stmicroelectronics.pdf">ST AN4879 — USB hardware and PCB guidelines for STM32 MCUs</a></li>
+      <li>ST TA0357 — USB Type-C considerations. <span class="tbd">link TBD</span></li>
+      <li><a href="https://www.phils-lab.net/courses">Phil’s Lab — Mixed-Signal Hardware Design Course</a></li>
+    </ul>
+
+    <h3 id="datasheets">Datasheets</h3>
+
+    <ul>
+      <li><a href="https://www.holtek.com/productdetail/-/vg/ht75xx-1">HT75xx LDO regulator family</a></li>
+      <li><a href="https://www.ti.com/product/TLV62569">TLV62569P buck converter (TI)</a></li>
+      <li><a href="https://www.ti.com/product/REF3033">REF3033 voltage reference (TI)</a></li>
+      <li><a href="https://www.ti.com/product/ADC141S626">ADC141S626 14-bit ADC (TI)</a></li>
+      <li>USBLC6-2SC6 ESD protection (ST). <span class="tbd">link TBD</span></li>
+      <li>PESD3V3L1BA TVS diode (Nexperia). <span class="tbd">link TBD</span></li>
+      <li>STM32F103CB MCU (ST). <span class="tbd">link TBD</span></li>
+    </ul>
+
+    <div class="tab-footer">
+  <a href="#adc" data-tab-link="adc">&larr; ADC / DAC</a>
+  <a href="#intro" data-tab-link="intro">Back to Introduction</a>
+</div>
+
+  </section>
+
+</div>
+
+<script>
+(function () {
+  var root = document.querySelector('.msp-tabs');
+  if (!root) return;
+  var buttons = root.querySelectorAll('nav.tab-nav button');
+  var panes = root.querySelectorAll('.tab-pane');
+  var validTabs = Array.prototype.map.call(buttons, function (b) { return b.dataset.tab; });
+
+  function activate(name, opts) {
+    if (validTabs.indexOf(name) === -1) name = validTabs[0];
+    buttons.forEach(function (b) { b.classList.toggle('active', b.dataset.tab === name); });
+    panes.forEach(function (p) { p.classList.toggle('active', p.id === 'tab-' + name); });
+    if (location.hash !== '#' + name) {
+      history.replaceState(null, '', '#' + name);
+    }
+    if (!opts || !opts.preserveScroll) {
+      window.scrollTo(0, 0);
+    }
+  }
+
+  buttons.forEach(function (b) {
+    b.addEventListener('click', function () { activate(b.dataset.tab); });
+  });
+  root.querySelectorAll('[data-tab-link]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      e.preventDefault();
+      activate(a.dataset.tabLink);
+    });
+  });
+  window.addEventListener('hashchange', function () {
+    activate((location.hash || '#intro').slice(1), { preserveScroll: true });
+  });
+
+  var initial = (location.hash || '#intro').slice(1);
+  activate(initial, { preserveScroll: true });
+})();
+</script>
+
+
+</article>
+
+      </main>
+
+      <footer class="footer">
+        <small>
+          &copy;
+          <time datetime="2026-05-08T00:40:26-04:00"
+            >2026</time
+          >. All rights reserved.
+        </small>
+      </footer>
+    </div>
+
+    
+  </body>
+</html>

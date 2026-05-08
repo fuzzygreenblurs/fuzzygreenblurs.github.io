@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark-poole">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+
+  <title>
+    
+      Opto-Isolated PWM Motor Driver &middot; Akhil Sankar
+    
+  </title>
+
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/assets/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/assets/favicon.ico">
+  <link rel="alternate" type="application/atom+xml" title="Akhil Sankar" href="/atom.xml">
+
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="Opto-Isolated PWM Motor Driver" />
+<meta name="author" content="Akhil Sankar" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Discrete opto-isolated low-side driver for a small brushed-DC ducted fan — the first hardware stage of the icarus-fc 1D hover stabilizer, built on a solderboard and validated open-loop on the bench before MCU integration." />
+<meta property="og:description" content="Discrete opto-isolated low-side driver for a small brushed-DC ducted fan — the first hardware stage of the icarus-fc 1D hover stabilizer, built on a solderboard and validated open-loop on the bench before MCU integration." />
+<link rel="canonical" href="https://fuzzygreenblurs.github.io/projects/icarus-fc/optoisolator-driver" />
+<meta property="og:url" content="https://fuzzygreenblurs.github.io/projects/icarus-fc/optoisolator-driver" />
+<meta property="og:site_name" content="Akhil Sankar" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-05-08T00:40:26-04:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Opto-Isolated PWM Motor Driver" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Akhil Sankar","url":"https://github.com/fuzzygreenblurs"},"dateModified":"2026-05-08T00:40:26-04:00","datePublished":"2026-05-08T00:40:26-04:00","description":"Discrete opto-isolated low-side driver for a small brushed-DC ducted fan — the first hardware stage of the icarus-fc 1D hover stabilizer, built on a solderboard and validated open-loop on the bench before MCU integration.","headline":"Opto-Isolated PWM Motor Driver","mainEntityOfPage":{"@type":"WebPage","@id":"https://fuzzygreenblurs.github.io/projects/icarus-fc/optoisolator-driver"},"url":"https://fuzzygreenblurs.github.io/projects/icarus-fc/optoisolator-driver"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+
+
+  <body>
+    <div class="container content">
+      <header class="masthead">
+        <h3 class="masthead-title">
+          <a href="/" title="Home">Akhil Sankar</a>
+
+          <nav class="nav">
+            
+            <small><a href="/projects">Projects</a></small>
+            
+          </nav>
+        </h3>
+      </header>
+
+      <main>
+        <article class="page">
+  <h1 class="page-title">Opto-Isolated PWM Motor Driver</h1>
+  <p>Discrete opto-isolated low-side driver for a small brushed-DC ducted fan — the first hardware stage of the <a href="https://github.com/fuzzygreenblurs/icarus-fc">icarus-fc 1D hover stabilizer</a>, built on a solderboard and validated open-loop on the bench before MCU integration.</p>
+
+<style>
+.demo-row {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin: 2rem auto 0.5rem;
+}
+.demo-card {
+  position: relative;
+  display: inline-block;
+  width: 360px;
+  max-width: 100%;
+  text-decoration: none;
+}
+.demo-card img {
+  width: 100%;
+  display: block;
+  border-radius: 8px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+  transition: transform 0.15s ease;
+}
+.demo-card:hover img { transform: scale(1.02); }
+.demo-card .play-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 68px;
+  height: 48px;
+  background: rgba(0,0,0,0.78);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease;
+  pointer-events: none;
+}
+.demo-card:hover .play-overlay { background: #ff0000; }
+.demo-card .play-overlay::before {
+  content: "";
+  display: block;
+  border-style: solid;
+  border-width: 11px 0 11px 18px;
+  border-color: transparent transparent transparent #fff;
+  margin-left: 4px;
+}
+.demo-card .yt-badge {
+  position: absolute;
+  bottom: 0.55rem;
+  right: 0.55rem;
+  background: rgba(0,0,0,0.78);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 0.18rem 0.42rem;
+  border-radius: 3px;
+  pointer-events: none;
+}
+.demo-caption {
+  text-align: center;
+  font-size: 0.92rem;
+  opacity: 0.7;
+  margin-top: 0.25rem;
+  margin-bottom: 2.5rem;
+  font-style: italic;
+}
+</style>
+
+<div class="demo-row">
+  <a class="demo-card" href="https://youtube.com/shorts/NCCM40ZPoXY?feature=share" target="_blank" rel="noopener" aria-label="Demo 1: driver running open-loop">
+    <img src="https://img.youtube.com/vi/NCCM40ZPoXY/hqdefault.jpg" alt="Demo 1" />
+    <span class="play-overlay" aria-hidden="true"></span>
+    <span class="yt-badge">YouTube</span>
+  </a>
+  <a class="demo-card" href="https://youtube.com/shorts/bAPke4g3cEE?feature=share" target="_blank" rel="noopener" aria-label="Demo 2: driver running open-loop">
+    <img src="https://img.youtube.com/vi/bAPke4g3cEE/hqdefault.jpg" alt="Demo 2" />
+    <span class="play-overlay" aria-hidden="true"></span>
+    <span class="yt-badge">YouTube</span>
+  </a>
+</div>
+
+<p class="demo-caption">Driver running open-loop with the ducted fan — click to watch (YouTube Shorts)</p>
+
+<h3 id="overview-of-circuit">Overview of circuit</h3>
+
+<p><img src="/assets/images/optoisolator/motor_control_circuit.png" alt="Motor control circuit schematic" /></p>
+
+<p>The motor circuit must protect the microcontroller from the large <em>L · di/dt</em> voltage spikes that come off a PWM-driven DC motor. The <strong>4N35 optoisolator</strong> completely isolates the MCU from the motor. The <strong>1N4001 snubber diode</strong> provides a path to ground for reverse-polarity spikes coming off the motor, and the capacitor in parallel with the 1N4001 provides a path to ground for higher-frequency noise.</p>
+
+<p>Some of the components in this circuit require some experimentation/trial and error. The resistor attached to the base of the 4N35 should be set for best fall-time, probably ~1 MΩ. The capacitor in parallel with the motor should be ceramic (electrolytics are too slow) and should start with a value ~0.1 µF. If there is too much spike noise on the analog input, this value can be increased.</p>
+
+<p>Note that we’re driving the gate of the power MOSFET at <strong>12 V</strong>, and the motor at <strong>5–6 V</strong>.</p>
+
+<h3 id="pinouts-and-pwm-frequency">Pinouts and PWM frequency</h3>
+
+<p>The pinouts for the 4N35 optoisolator and the IRLB8721 power MOSFET (TO-220AB package) are shown in the schematic above. Note that it is the <strong>bandwidth of the 4N35 that constrains the PWM frequency</strong> — the bandwidth for this device is low, so the design uses a PWM frequency of about <strong>1 kHz</strong>.</p>
+
+<h3 id="bench-setup">Bench setup</h3>
+
+<p>A function generator stands in for the MCU’s PWM output during open-loop validation; the oscilloscope probes the input PWM and the gate-drive node downstream of the optoisolator.</p>
+
+<p><img src="/assets/images/optoisolator/IMG_6961.JPG" alt="Kuman dual-channel function generator and Hantek DSO2D15 oscilloscope on the bench" /></p>
+
+<p><img src="/assets/images/optoisolator/IMG_6962.JPG" alt="Function generator configured for a 1 kHz square wave on CH2 (PWM stand-in for MCU)" /></p>
+
+<p><img src="/assets/images/optoisolator/IMG_6959.JPG" alt="Variable bench supply at 12.0 V / 0.20 A driving the gate-drive side of the solderboard" /></p>
+
+<p><img src="/assets/images/optoisolator/IMG_6965.JPG" alt="Solderboard build: 4N35 optoisolator, IRLB8721 N-MOSFET, 1N4001 snubber, 0.1 µF ceramic in parallel with motor" /></p>
+
+<h3 id="waveforms">Waveforms</h3>
+
+<p><img src="/assets/images/optoisolator/IMG_6958.JPG" alt="Scope capture: 1 kHz square wave on the output stage of the driver" /></p>
+
+<h3 id="source-files">Source files</h3>
+
+<ul>
+  <li>Schematic and design notes: <a href="https://github.com/fuzzygreenblurs/icarus-fc/blob/main/1d_stabilizer/notes/motor_control_circuit.png"><code class="language-plaintext highlighter-rouge">1d_stabilizer/notes/motor_control_circuit.png</code></a></li>
+  <li>Bench-test photos: <a href="https://github.com/fuzzygreenblurs/icarus-fc/tree/main/1d_stabilizer/results/open_loop_testing"><code class="language-plaintext highlighter-rouge">1d_stabilizer/results/open_loop_testing/</code></a></li>
+  <li>Reference reading: <a href="https://github.com/fuzzygreenblurs/icarus-fc/blob/main/1d_stabilizer/notes/dc_motor_circuit_layout.pdf">DC motor circuit layout</a>, <a href="https://github.com/fuzzygreenblurs/icarus-fc/blob/main/1d_stabilizer/notes/PWM_pico.pdf">PWM (Pico)</a>, <a href="https://github.com/fuzzygreenblurs/icarus-fc/blob/main/1d_stabilizer/notes/brushed_dc_principle.pdf">brushed DC principles</a></li>
+</ul>
+
+</article>
+
+      </main>
+
+      <footer class="footer">
+        <small>
+          &copy;
+          <time datetime="2026-05-08T00:40:26-04:00"
+            >2026</time
+          >. All rights reserved.
+        </small>
+      </footer>
+    </div>
+
+    
+  </body>
+</html>

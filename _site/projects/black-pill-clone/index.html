@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark-poole">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+
+  <title>
+    
+      STM32 Black Pill Clone (KiCad) &middot; Akhil Sankar
+    
+  </title>
+
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/assets/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/assets/favicon.ico">
+  <link rel="alternate" type="application/atom+xml" title="Akhil Sankar" href="/atom.xml">
+
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="STM32 Black Pill Clone (KiCad)" />
+<meta name="author" content="Akhil Sankar" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A from-scratch clone of the popular STM32 “Black Pill” development board, designed end-to-end in KiCad as a hands-on exercise in PCB design: schematic capture through manufacturing file generation. Built following Phil’s Lab’s KiCad tutorial as a structured run through the full workflow." />
+<meta property="og:description" content="A from-scratch clone of the popular STM32 “Black Pill” development board, designed end-to-end in KiCad as a hands-on exercise in PCB design: schematic capture through manufacturing file generation. Built following Phil’s Lab’s KiCad tutorial as a structured run through the full workflow." />
+<link rel="canonical" href="http://localhost:4000/projects/black-pill-clone/" />
+<meta property="og:url" content="http://localhost:4000/projects/black-pill-clone/" />
+<meta property="og:site_name" content="Akhil Sankar" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-05-28T07:54:05-04:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="STM32 Black Pill Clone (KiCad)" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Akhil Sankar","url":"https://github.com/fuzzygreenblurs"},"dateModified":"2026-05-28T07:54:05-04:00","datePublished":"2026-05-28T07:54:05-04:00","description":"A from-scratch clone of the popular STM32 “Black Pill” development board, designed end-to-end in KiCad as a hands-on exercise in PCB design: schematic capture through manufacturing file generation. Built following Phil’s Lab’s KiCad tutorial as a structured run through the full workflow.","headline":"STM32 Black Pill Clone (KiCad)","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/projects/black-pill-clone/"},"url":"http://localhost:4000/projects/black-pill-clone/"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+
+
+  <body>
+    <div class="container content">
+      <header class="masthead">
+        <h3 class="masthead-title">
+          <a href="/" title="Home">Akhil Sankar</a>
+
+          <nav class="nav">
+            
+            <small><a href="/projects">Projects</a></small>
+            
+          </nav>
+        </h3>
+      </header>
+
+      <main>
+        <article class="page">
+  <h1 class="page-title">STM32 Black Pill Clone (KiCad)</h1>
+  <p>A from-scratch clone of the popular STM32 “Black Pill” development board, designed end-to-end in KiCad as a hands-on exercise in PCB design: schematic capture through manufacturing file generation. Built following <a href="https://www.youtube.com/watch?v=aVUqaB0IMh4">Phil’s Lab’s KiCad tutorial</a> as a structured run through the full workflow.</p>
+
+<h3 id="overview">Overview</h3>
+
+<p>The board breaks out an <strong>STM32F103C8T6</strong> microcontroller with the peripherals needed to bring it up on a breadboard:</p>
+
+<ul>
+  <li><strong>MCU:</strong> STM32F103C8T6 (ARM Cortex-M3, 72 MHz)</li>
+  <li><strong>Power:</strong> 5 V over USB, regulated to 3.3 V on-board via an AMS1117-3.3 LDO</li>
+  <li><strong>Clock:</strong> 16 MHz HSE crystal with 10 pF load capacitors</li>
+  <li><strong>USB:</strong> USB-B Micro for power and communication (with a 1.5 kΩ pull-up on D+ per ST AN4879)</li>
+  <li><strong>Programming:</strong> 4-pin SWD header (3.3 V, SWDIO, SWDCLK, GND)</li>
+  <li><strong>Peripherals:</strong> 4-pin UART and I²C headers (1.5 kΩ pull-ups on SDA / SCL)</li>
+  <li><strong>Boot select:</strong> SPDT slide switch to choose between flashed firmware (RUN) and the internal bootloader (BLDR)</li>
+  <li><strong>Mechanical:</strong> four M2 mounting holes</li>
+</ul>
+
+<h3 id="schematic">Schematic</h3>
+
+<p><img src="/assets/images/black-pill-clone/schematic.png" alt="STM32 Black Pill clone schematic showing Power Supply (LDO), MCU &amp; USB, and Mounting Holes sections" /></p>
+
+<p>The schematic is organized into three logical blocks:</p>
+
+<ul>
+  <li><strong>Power Supply (LDO).</strong> An AMS1117-3.3 linear regulator steps the nominal +5 V USB rail down to +3.3 V, with 22 µF bulk capacitors on both the input and output sides. A red power-on LED with a 1.5 kΩ current-limiting resistor provides a visual indicator that the regulator is running.</li>
+  <li><strong>MCU &amp; USB.</strong> The STM32F103C8T6 is decoupled with a 100 nF capacitor per VDD pin plus a 10 µF bulk capacitor. VDDA is given additional filtering through a 120 Ω ferrite bead and its own 1 µF and 10 nF caps. Clocking is provided by a 16 MHz crystal with 10 pF load capacitors (sized per <code class="language-plaintext highlighter-rouge">2 · (C_L − C_s) = 2 · (10 − 5) pF</code>). BOOT0 is selected via an SPDT slide switch (with a 10 kΩ pull-down and a 100 nF debounce cap) to choose between running flashed firmware and entering the internal bootloader. USB-B Micro follows the reference design in ST Application Note AN4879, with a 1.5 kΩ pull-up on USB_D+ to identify the device as full-speed to the host. The pin-out was planned in STM32CubeMX, then transcribed onto the schematic.</li>
+  <li><strong>Mounting Holes.</strong> Four M2 mounting holes at the corners for mechanical attachment.</li>
+</ul>
+
+<p>UART, I²C, and SWD are each broken out to a 4-pin header. The I²C lines (PB10 / PB11) carry 1.5 kΩ pull-ups to 3.3 V on SDA and SCL.</p>
+
+<h3 id="pcb-layout">PCB Layout</h3>
+
+<p><img src="/assets/images/black-pill-clone/layout.png" alt="STM32 Black Pill clone PCB layout, a two-layer board with labeled headers and components" /></p>
+
+<p>The board is a compact two-layer design. Placement priorities:</p>
+
+<ul>
+  <li>The <strong>MCU sits in the centre</strong> with its decoupling caps tucked tight against the respective VDD pins to keep loop area small.</li>
+  <li>The <strong>crystal (Y1) and its load caps (C10/C11)</strong> are placed directly next to the HSE_IN / HSE_OUT pins, with a short, tight return path to minimize stray capacitance.</li>
+  <li>The <strong>USB connector (J1)</strong> is on the right edge of the board so the cable enters cleanly, with the USB_D+ pull-up (R2) and a decoupling cap (C3) placed close by. The differential pair is routed as a short matched run from the connector to the MCU.</li>
+  <li>The <strong>LDO (U2) and its bulk caps (C12/C13)</strong> sit in the lower-right, near the USB VBUS entry point, with the power LED (D1) and its current-limiting resistor (R3) at the far corner.</li>
+  <li>The <strong>BOOT0 slide switch</strong> is on the left edge, labeled <code class="language-plaintext highlighter-rouge">TOP: RUN / BTM: BLDR</code> on the silkscreen so the operating mode is unambiguous when handling the board.</li>
+  <li>The <strong>UART, SWD, and I²C headers</strong> are arranged along the top and bottom edges so they remain accessible when the board is mounted.</li>
+</ul>
+
+<p>Power and ground are pulled in via wider traces; signal routing uses both layers (red top, blue bottom) with vias to cross over where needed. Four M2 mounting holes anchor the corners.</p>
+
+<h3 id="3d-cad-render">3D CAD Render</h3>
+
+<p>A final 3D render of the assembled board using the imported component models, used as a sanity check on connector orientation, silkscreen placement, and overall mechanical fit before sending the design out.</p>
+
+<p><img src="/assets/images/black-pill-clone/screenshot_front.png" alt="Top side of the assembled board, showing MCU, crystal, USB-B Micro, slide switch, and headers in place" /></p>
+
+<p><img src="/assets/images/black-pill-clone/screenshot_back.png" alt="Bottom side of the board, showing through-hole pads, board outline, and the silkscreen revision tag" /></p>
+
+<h3 id="process">Process</h3>
+
+<p>The project followed a full KiCad workflow end-to-end:</p>
+
+<ol>
+  <li><strong>Schematic capture</strong>: symbol placement, net naming, ERC, annotation</li>
+  <li><strong>Footprint assignment</strong> and 3D model verification</li>
+  <li><strong>Layout</strong>: component placement, footprint adjustments, board outline, mounting holes</li>
+  <li><strong>Routing</strong>: decoupling and crystal first, then signal nets, then power</li>
+  <li><strong>Design Rule Check (DRC)</strong> and finishing touches</li>
+  <li><strong>Manufacturing output</strong>: BOM, CPL, Gerbers, and drill files for fab</li>
+</ol>
+
+<h3 id="source">Source</h3>
+
+<p>KiCad project files, manufacturing outputs, and renders: <a href="https://github.com/fuzzygreenblurs/black-pill-clone"><code class="language-plaintext highlighter-rouge">fuzzygreenblurs/black-pill-clone</code></a></p>
+
+</article>
+
+      </main>
+
+      <footer class="footer">
+        <small>
+          &copy;
+          <time datetime="2026-05-28T07:54:05-04:00"
+            >2026</time
+          >. All rights reserved.
+        </small>
+      </footer>
+    </div>
+
+    
+  </body>
+</html>

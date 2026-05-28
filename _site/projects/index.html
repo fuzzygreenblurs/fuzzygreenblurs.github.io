@@ -23,14 +23,14 @@
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Personal site of Akhil Sankar." />
 <meta property="og:description" content="Personal site of Akhil Sankar." />
-<link rel="canonical" href="http://localhost:4000/projects/" />
-<meta property="og:url" content="http://localhost:4000/projects/" />
+<link rel="canonical" href="https://fuzzygreenblurs.github.io/projects/" />
+<meta property="og:url" content="https://fuzzygreenblurs.github.io/projects/" />
 <meta property="og:site_name" content="Akhil Sankar" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Projects" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","author":{"@type":"Person","name":"Akhil Sankar","url":"https://github.com/fuzzygreenblurs"},"description":"Personal site of Akhil Sankar.","headline":"Projects","url":"http://localhost:4000/projects/"}</script>
+{"@context":"https://schema.org","@type":"WebPage","author":{"@type":"Person","name":"Akhil Sankar","url":"https://github.com/fuzzygreenblurs"},"description":"Personal site of Akhil Sankar.","headline":"Projects","url":"https://fuzzygreenblurs.github.io/projects/"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -57,8 +57,10 @@
 <p>A from-scratch clone of the STM32F103C8T6 Black Pill development board, taken end-to-end in KiCad: schematic capture, footprint assignment, two-layer layout, routing with DRC, and generation of manufacturing files (BOM, CPL, Gerbers, drill). Breaks out USB-B Micro, SWD, UART, and I²C with on-board 3.3 V LDO regulation, a 16 MHz HSE crystal, and a BOOT0 slide switch.
 <br /><br /></p>
 
-<h3 id="icarus-fc-1d-hover-stabilizer-in-progress-c"><a href="https://github.com/fuzzygreenblurs/icarus-fc">icarus-fc: 1D Hover Stabilizer (in-progress, C)</a></h3>
-<p>A bare-metal 1D hover stabilizer on STM32F446. The first hardware stage — a <a href="/projects/icarus-fc/optoisolator-driver">discrete opto-isolated motor driver</a> — was built on a solderboard and bench-validated open-loop. MPU9250 IMU driver over SPI is in place; closed-loop PID control with complementary-filtered attitude feedback is the next phase.
+<h3 id="icarus-fc-1d-hover-stabilizer-in-progress-c"><a href="/projects/icarus-fc/optoisolator-driver">icarus-fc: 1D Hover Stabilizer (in-progress, C)</a></h3>
+<p>A bare-metal 1D hover stabilizer on STM32F446. The first hardware stage is a discrete opto-isolated motor driver, built on a solderboard and bench-validated open-loop. I am currently adding closed-loop PID hover angle control using complementary-filtered attitude feedback from an SPI-based MPU9250 IMU driver, layered over a FreeRTOS task structure and a fail-safe state machine.</p>
+
+<p><em>Source: <a href="https://github.com/fuzzygreenblurs/icarus-fc">github.com/fuzzygreenblurs/icarus-fc</a>.</em>
 <br /><br /></p>
 
 <h3 id="vertical-farm-orchestrator-python"><a href="https://github.com/fuzzygreenblurs/vfarm">Vertical Farm Orchestrator (Python)</a></h3>
@@ -93,7 +95,7 @@
       <footer class="footer">
         <small>
           &copy;
-          <time datetime="2026-05-28T07:54:05-04:00"
+          <time datetime="2026-05-28T08:10:46-04:00"
             >2026</time
           >. All rights reserved.
         </small>

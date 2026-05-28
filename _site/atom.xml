@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
  <title>Akhil Sankar</title>
- <link href="http://localhost:4000/atom.xml" rel="self"/>
- <link href="http://localhost:4000/"/>
- <updated>2026-05-28T07:54:05-04:00</updated>
- <id>http://localhost:4000</id>
+ <link href="https://fuzzygreenblurs.github.io/atom.xml" rel="self"/>
+ <link href="https://fuzzygreenblurs.github.io/"/>
+ <updated>2026-05-28T08:10:46-04:00</updated>
+ <id>https://fuzzygreenblurs.github.io</id>
  <author>
    <name>Akhil Sankar</name>
    <email></email>
@@ -14,9 +14,9 @@
  
  <entry>
    <title>Hello.</title>
-   <link href="http://localhost:4000/2023/11/02/introduction/"/>
+   <link href="https://fuzzygreenblurs.github.io/2023/11/02/introduction/"/>
    <updated>2023-11-02T00:00:00-04:00</updated>
-   <id>http://localhost:4000/2023/11/02/introduction</id>
+   <id>https://fuzzygreenblurs.github.io/2023/11/02/introduction</id>
    <content type="html">&lt;p&gt;My name is Akhil and I am an embedded systems engineer.
 &lt;br /&gt;&lt;br /&gt;
 I have nine years of professional software engineering experience, spanning production-scale distributed systems (Ruby, JavaScript, Python) and embedded firmware (C, C++) across IoT applications in the health wellness, smart home, and farming automation spaces. More recently, my work has centered on ARM Cortex-M bare-metal and RTOS-based firmware, drivers, BSPs, state machine design, and HIL testing.

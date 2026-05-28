@@ -7,8 +7,10 @@ title: Projects
 A from-scratch clone of the STM32F103C8T6 Black Pill development board, taken end-to-end in KiCad: schematic capture, footprint assignment, two-layer layout, routing with DRC, and generation of manufacturing files (BOM, CPL, Gerbers, drill). Breaks out USB-B Micro, SWD, UART, and I²C with on-board 3.3 V LDO regulation, a 16 MHz HSE crystal, and a BOOT0 slide switch.
 <br><br>
 
-### [icarus-fc: 1D Hover Stabilizer (in-progress, C)](https://github.com/fuzzygreenblurs/icarus-fc)
-A bare-metal 1D hover stabilizer on STM32F446. The first hardware stage — a [discrete opto-isolated motor driver](/projects/icarus-fc/optoisolator-driver) — was built on a solderboard and bench-validated open-loop. MPU9250 IMU driver over SPI is in place; closed-loop PID control with complementary-filtered attitude feedback is the next phase.
+### [icarus-fc: 1D Hover Stabilizer (in-progress, C)](/projects/icarus-fc/optoisolator-driver)
+A bare-metal 1D hover stabilizer on STM32F446. The first hardware stage is a discrete opto-isolated motor driver, built on a solderboard and bench-validated open-loop. I am currently adding closed-loop PID hover angle control using complementary-filtered attitude feedback from an SPI-based MPU9250 IMU driver, layered over a FreeRTOS task structure and a fail-safe state machine.
+
+_Source: [github.com/fuzzygreenblurs/icarus-fc](https://github.com/fuzzygreenblurs/icarus-fc)._
 <br><br>
 
 ### [Vertical Farm Orchestrator (Python)](https://github.com/fuzzygreenblurs/vfarm)
